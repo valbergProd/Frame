@@ -19,6 +19,8 @@ The archive manifest is based on the [Microsoft WinGet manifest](https://github.
 - Production Inno Setup 6.4.3 compilation: success, no warnings. Separate validation build: same prerequisite/install code, distinct AppId, no production shortcuts/launch/user-data cleanup, no compression; harmless unused-variable hint in that build only.
 - Complete installer integration: 13/13 passed (real online download/install, missing/corrupt archive rejection, payload/hash identity, offline reuse, failed repair preserving existing app files, successful offline repair, installed-app render, private-tool media execution, uninstall and preserved user state).
 - Installed-app media suite: 36/36 passed with automatic private-tool resolution and no `--ffmpeg` override, including replay, trim, share, thumbnails and encoder probes.
+- Release publisher `-Preview`: accepted final installer filename, version, size and SHA-256; no release created.
+- Source commit `a255944c5678e4cf7054dbb6c10041cd5ca52246` pushed after preserving the user's concurrent README edit. [GitHub Actions run 40766259826](https://github.com/valbergProd/Frame/actions/runs/40766259826) passed Windows build and Core regression tests. A documentation-only follow-up records this result with `[skip ci]`.
 
 Evidence: `work/setup-068` and `work/installer-smoke-*`. The integration script is `scripts/Test-SetupFfmpeg.ps1`; all data/media fixtures are isolated under work. The production installer was compiled, while destructive install/upgrade/uninstall scenarios use the isolated validation variant to preserve the existing user installation.
 
