@@ -22,7 +22,8 @@ The project now has Git exclusions for build outputs, installed beta copies, arc
 - Final executable UI diagnostics: **6/6 in Dark and 6/6 in Light**. Verify idle/available/downloading/downloaded states and action-gate installation guard. Both final renders were inspected: labels, checkbox and buttons fit and remain readable. No actual network or capture in these renders.
 - Release-script parser and `-Preview` passed against the existing 0.5.4 installer, including its SHA-256/version check. No release was created by the preview.
 - Total local validation: **178/178 checks**. Evidence: `work/github-066/core-tests.txt`, `installer-test/result.json`, `installer-test/handoff.json`, `ui-dark/updates.png.checks.json`, `ui-light/updates.png.checks.json`, and `verify-build.ps1`.
-- GitHub build and live public-feed results are recorded after the initial push.
+- Public source upload verified: `main` at initial code commit `610b888dea346767fb75389359b83ce5b67d2f7e`, repository visibility PUBLIC. [GitHub Actions run 40759539656](https://github.com/torsteinvalberg/Frame/actions/runs/40759539656) **passed** its clean Windows build and Core regression tests. Final documentation-only follow-up uses `[skip ci]`; executable source remains the tested commit's source.
+- The built `AppUpdates` client successfully queried the actual public GitHub feed without credentials and returned no newer installer, as expected before setup publication. Evidence: `work/github-066/live-feed.json`.
 
 ## Build and limits
 
