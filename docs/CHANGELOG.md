@@ -1,3 +1,10 @@
+# FRAME 0.6.8 · FFmpeg prepared by Setup · 28 October 2026
+
+- Setup automatically downloads and verifies FFmpeg 8.1.2 recording tools into FRAME's private tools folder. No separate installation after launch; no winget or administrator rights required.
+- Identical verified tools are reused during upgrades. Failed downloads/checks stop before FRAME files change and can be retried. A verified local archive supports offline installation and repairs.
+- Uninstall removes Setup-installed recording tools while preserving settings, recordings and other FFmpeg installations. Publisher license/build information is retained.
+- Updated setup documentation and README; README describes FRAME only. See `FRAME_068_VALIDATION.md` for evidence and limits.
+
 # FRAME 0.6.7 · GitHub account rename · 28 October 2026 (not packaged as an installer)
 
 - Update checks, release download validation and release publishing now use `valbergProd/Frame`, following the owner's GitHub username change. Operational links and the local Git origin were updated.

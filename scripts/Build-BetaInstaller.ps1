@@ -4,7 +4,8 @@
     # Optional overrides for test installers; the release uses the csproj version.
     [string]$Version = '',
     [string]$Label = '',
-    [string]$OutputRoot = ''
+    [string]$OutputRoot = '',
+    [switch]$ValidationBuild
 )
 # FRAME beta installer build. Usage (from any folder):
 #   powershell -ExecutionPolicy Bypass -File C:\dev\Frame\scripts\Build-BetaInstaller.ps1
@@ -36,6 +37,7 @@ if (-not $SourceExe -and -not (Get-Command dotnet -ErrorAction SilentlyContinue)
 if (-not $OutputRoot) { $OutputRoot = Join-Path $repo 'builds' }
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $release = Join-Path $OutputRoot ("FRAME-$($Label -replace '\s+', '-')-$stamp")
+if ($ValidationBuild) { $release += '-validation' }
 if (Test-Path $release) { throw "Release folder already exists (not overwritten): $release" }
 New-Item -ItemType Directory -Path $release | Out-Null
 $app = Join-Path $release 'app'; New-Item -ItemType Directory -Path $app | Out-Null
@@ -58,17 +60,17 @@ if (-not $SourceExe -and $info.FileVersion -ne $fileVersion) { throw "FRAME.exe 
 if ((Get-Item $exe).Length -lt 50MB) { throw 'FRAME.exe is unexpectedly small for a self-contained build.' }
 
 # Smoke test of the payload: renders the main window from embedded resources on a throw-away data folder (no capture).
-$smoke = Join-Path ([IO.Path]::GetTempPath()) ("FRAME-smoke-" + [guid]::NewGuid().ToString('N'))
+$smoke = Join-Path $repo ("work\installer-smoke-" + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path "$smoke\captures" | Out-Null
 @{ OutputDirectory = "$smoke\captures"; Onboarded = $true; ReduceMotion = $true } | ConvertTo-Json | Set-Content -LiteralPath "$smoke\settings.json"
-$p = Start-Process -FilePath $exe -ArgumentList @('--data', $smoke, '--render', "$smoke\smoke.png") -PassThru
+$p = Start-Process -FilePath $exe -ArgumentList "--data `"$smoke`" --render `"$smoke\smoke.png`"" -WindowStyle Hidden -PassThru
 if (-not $p.WaitForExit(180000)) { $p.Kill(); throw 'Smoke render timed out.' }
 if ($p.ExitCode -ne 0 -or -not (Test-Path "$smoke\smoke.png") -or (Get-Item "$smoke\smoke.png").Length -lt 20KB) { throw "Smoke render failed (exit $($p.ExitCode))." }
 # [string]: Get-Content adds PowerShell metadata (PSPath, …) that ConvertTo-Json would otherwise write out.
 $smokeLog = [string](Get-ChildItem "$smoke\Logs" -Filter 'FRAME-*.log' -ErrorAction SilentlyContinue | Get-Content -Encoding UTF8 | Select-Object -First 1)
 if (-not $smokeLog) { $smokeLog = 'rendered; no Logs folder (payload older than the 0.5.4 beta logging)' }
 if (-not $SourceExe -and $bundledRuntime -and $smokeLog -notlike "*.NET $bundledRuntime *") { throw "The published FRAME.exe does not run on the expected .NET $bundledRuntime runtime: $smokeLog" }
-Remove-Item $smoke -Recurse -Force
+# Retain isolated smoke evidence under work; never remove computed paths recursively here.
 
 # Wizard images from the FRAME icon (dark tile, like the app)
 # WPF's decoder reads every icon frame (the large ones are PNG-compressed, which GDI+ in Windows PowerShell cannot read).
@@ -103,7 +105,9 @@ foreach ($scale in 1, 2) {
 
 # Installer
 $base = "FRAME-$Version-Beta-Setup"
-& $iscc "/DAppVersion=$Version" "/DFileVersion=$fileVersion" "/DVersionLabel=$Label" "/DSourceExe=$exe" "/DOutputDir=$release" "/DRepoRoot=$repo" "/DOutputBase=$base" "/DWizardImages=$($images -join ',')" "/DWizardLargeImages=$($large -join ',')" (Join-Path $repo 'packaging\FRAME.iss')
+$validationArgs = @()
+if ($ValidationBuild) { $validationArgs = @('/DValidationBuild'); $base += '-Validation' }
+& $iscc @validationArgs "/DAppVersion=$Version" "/DFileVersion=$fileVersion" "/DVersionLabel=$Label" "/DSourceExe=$exe" "/DOutputDir=$release" "/DRepoRoot=$repo" "/DOutputBase=$base" "/DWizardImages=$($images -join ',')" "/DWizardLargeImages=$($large -join ',')" (Join-Path $repo 'packaging\FRAME.iss')
 if ($LASTEXITCODE -ne 0) { throw 'Inno Setup compilation failed.' }
 Remove-Item -LiteralPath ($images + $large)
 $setup = Join-Path $release "$base.exe"
@@ -122,6 +126,8 @@ $buildInfo = [ordered]@{
     payload = [ordered]@{ file = 'app\FRAME.exe'; bytes = (Get-Item $exe).Length; sha256 = (Get-FileHash -Algorithm SHA256 $exe).Hash; fileVersion = $info.FileVersion; productVersion = $info.ProductVersion }
     tools = [ordered]@{ dotnet = $(if ($SourceExe) { 'not used (given exe)' } else { (& dotnet --version) }); bundledRuntime = $(if ($SourceExe) { 'see smokeTest' } else { $bundledRuntime }); innoSetup = $innoVersion }
     smokeTest = $smokeLog
+    validationOnly = [bool]$ValidationBuild
+    ffmpegManifestSha256 = (Get-FileHash (Join-Path $repo 'packaging\ffmpeg.ini')).Hash
 }
 $buildInfo | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $release 'build-info.json') -Encoding UTF8
 Write-Host ''

@@ -1,30 +1,25 @@
-FFmpeg is NOT included in FRAME 0.5.4 Beta.
+FFmpeg recording tools
 
-FRAME records, saves and exports video with FFmpeg (ffmpeg.exe and ffprobe.exe,
-version 8.1 or newer). FFmpeg is a separate program that you install yourself;
-FRAME starts it as a separate process and does not contain any FFmpeg code.
+FRAME Setup downloads the unmodified Gyan FFmpeg 8.1.2 full Windows x64 build
+directly from its publisher and installs ffmpeg.exe and ffprobe.exe in FRAME's
+tools folder. No FFmpeg binary is embedded in FRAME Setup or hosted in the
+FRAME repository. FRAME runs FFmpeg as a separate process.
 
-Where FRAME looks for FFmpeg (first match wins):
-  1. the path chosen in Settings > Advanced > FFmpeg
-  2. the tools folder next to FRAME.exe (ffmpeg.exe + ffprobe.exe)
-  3. a winget installation (%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe)
-  4. the PATH environment variable
+Publisher: https://www.gyan.dev/ffmpeg/builds/
+Package: https://github.com/GyanD/codexffmpeg/releases/tag/8.1.2
+FFmpeg source: https://github.com/FFmpeg/FFmpeg/tree/n8.1.2
+License information: https://ffmpeg.org/legal.html
 
-If FFmpeg is missing, FRAME shows a panel on the Capture page. "Install FFmpeg
-(winget)" opens a visible command window that runs:
-  winget install --id Gyan.FFmpeg --exact --source winget
-(package "Gyan.FFmpeg" from Microsoft's winget community repository; Windows
-builds by gyan.dev, which are linked from https://ffmpeg.org/download.html).
-Nothing is installed unless you start it and confirm in that window.
-
-Licensing: FFmpeg is licensed under the LGPL 2.1 or later; builds that enable
-GPL components (including the gyan.dev "full" build installed by the command
-above) are licensed under the GPL v3. Those terms apply to the FFmpeg build you
-install, not to FRAME. Keep the license file that comes with your build.
-FFmpeg source code: https://ffmpeg.org/download.html
+This Gyan build is licensed under GPL v3. Its unmodified LICENSE and README
+are retained as tools/FFMPEG-LICENSE.txt and tools/FFMPEG-README.txt. These
+third-party files are governed by their own license, not FRAME's terms.
 FFmpeg is a trademark of Fabrice Bellard, originator of the FFmpeg project.
 
-Why FFmpeg is not bundled: the FFmpeg builds that contain every encoder FRAME
-uses (including the CPU H.264 encoder libx264) are GPL-licensed. Distributing
-them inside FRAME's installer would place GPL obligations on FRAME's own
-distribution. Installing FFmpeg separately keeps FRAME and FFmpeg independent.
+Setup verifies a pinned archive SHA-256 and component hashes, and tests the
+recording filter and probe executable before installing FRAME. It reuses an
+identical verified private copy on upgrades. It does not change PATH, replace
+other FFmpeg installations, or change FRAME settings. An explicit FFmpeg path
+chosen in FRAME's Settings still takes precedence over the private tools.
+
+Uninstall removes the FFmpeg files installed by FRAME Setup with the app.
+Separately installed FFmpeg copies, settings and saved recordings are kept.

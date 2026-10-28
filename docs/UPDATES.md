@@ -22,4 +22,12 @@ The app contains no GitHub credentials. Checks use GitHub's public releases API;
 
 Pushing code alone does not ship an app update. The initial repository upload does not publish an installer. End-to-end installation of a newer official release must be qualified when that installer is prepared. Keep version numbers increasing; do not replace an already published installer with different bytes under the same version.
 
+## Recording tools in Setup (0.6.8+)
+
+Setup downloads the pinned Gyan FFmpeg package directly from its publisher, with a progress page, before modifying the installed app. `packaging/ffmpeg.ini` specifies the HTTPS URL, archive SHA-256 and hashes of the two executables and retained license/README. The helper extracts only those four entries and checks the capture filter and probe. Inno Setup then installs them into `{app}\tools` with normal uninstall tracking. No winget, PATH or registry changes are needed for FFmpeg. Explicit user-selected FFmpeg paths retain precedence.
+
+If the same four files are already present and verified, no download is required. Corruption or missing files trigger preparation again. A network/checksum/preparation error stops before copying app files, with retry/cancel guidance. First install requires internet and about 1 GB temporary space, plus app space. Administrators can provide the exact pre-downloaded package with `/FFMPEGARCHIVE="C:\path\ffmpeg-8.1.2-full_build.zip"`; the pinned checksum is still mandatory.
+
+Build an isolated installer with `Build-BetaInstaller.ps1 -ValidationBuild -SourceExe <published exe> -OutputRoot <work folder>`. This uses a separate AppId, skips shortcuts/app launch/user-data cleanup and compresses differently, while retaining the same prerequisite and file-install logic. Never distribute this validation installer. `Test-SetupFfmpeg.ps1` exercises real online setup, failed downloads, offline reuse/repair, installed-app media tests and uninstall under a fresh `work` directory. Change the manifest only after checking the publisher/package-manager metadata and validating the new media tools.
+
 Local handovers, builds, installed beta copies, capture fixtures and credentials are excluded from Git. Necessary source assets are included. Clone the repository and use `Build.ps1` for a local build/test, or `Publish.ps1 -SelfContained -OutputDirectory <new folder>` for a runnable local build.

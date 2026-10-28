@@ -2,7 +2,7 @@
 
 FRAME is a Windows screen recorder with disk-backed Shadow Recording, manual recording, a clip library and trimming. Save the last moments of your selected displays without starting a separate recording beforehand.
 
-**Current development version: 0.6.7-beta.** FRAME is in beta; this repository is not a declaration of a finished 1.0 release.
+**Current development version: 0.6.8-beta.** FRAME is in beta; this repository is not a declaration of a finished 1.0 release.
 
 ## Features
 
@@ -15,7 +15,7 @@ FRAME is a Windows screen recorder with disk-backed Shadow Recording, manual rec
 
 ## Requirements and build
 
-Use Windows x64 and the .NET 8 SDK to build. Recording requires FFmpeg 8.1 or newer with `gfxcapture` and a matching `ffprobe.exe`. FFmpeg is installed separately and is not redistributed here. A self-contained FRAME build includes the .NET runtime.
+Use Windows x64 and the .NET 8 SDK to build. FRAME Setup downloads and installs verified FFmpeg recording tools automatically; internet access is required for the first installation. FFmpeg binaries are downloaded directly from their publisher and are not embedded in Setup or stored in this repository. Standalone developer builds still need FFmpeg 8.1+ with `gfxcapture` and a matching `ffprobe.exe`. A self-contained FRAME build includes the .NET runtime.
 
 ```powershell
 .\Build.ps1
@@ -40,6 +40,6 @@ Installer releases will appear on the [Releases page](https://github.com/valberg
 - `scripts` and `packaging`: installer, validation and release tooling.
 - `docs`: validation reports, design history and release notes.
 
-See the [changelog](docs/CHANGELOG.md), [repository rename validation](docs/FRAME_067_VALIDATION.md), [updater validation](docs/FRAME_066_VALIDATION.md), [audio validation](docs/FRAME_065_VALIDATION.md) and [stop/shutdown validation](docs/FRAME_064_VALIDATION.md). Tests run in isolated folders under `work`; never use a user's settings or recordings as fixtures. Desktop capture, hardware and installer acceptance still require local Windows testing.
+See the [changelog](docs/CHANGELOG.md), [setup validation](docs/FRAME_068_VALIDATION.md), [updater validation](docs/FRAME_066_VALIDATION.md), [audio validation](docs/FRAME_065_VALIDATION.md) and [stop/shutdown validation](docs/FRAME_064_VALIDATION.md). Tests run in isolated folders under `work`; never use a user's settings or recordings as fixtures. Desktop capture, hardware and installer acceptance still require local Windows testing.
 
 Older documentation is retained as dated history, including the [previous README](docs/HISTORICAL_README_035.md). Local handover notes, builds, installed test copies and generated recordings are not versioned.

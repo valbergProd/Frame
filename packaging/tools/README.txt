@@ -1,16 +1,13 @@
-FRAME looks for FFmpeg in this folder (after a path chosen in Settings).
+FRAME Setup automatically prepares ffmpeg.exe and ffprobe.exe here.
+Do not move or delete them while FRAME is recording.
 
-Easiest: start FRAME. If FFmpeg is missing, the Capture page offers
-"Install FFmpeg (winget)", which runs in a visible window:
-  winget install --id Gyan.FFmpeg --exact --source winget
+The files are downloaded directly from Gyan's FFmpeg release during setup,
+with SHA-256 verification. FFMPEG-LICENSE.txt and FFMPEG-README.txt retain the
+publisher's license and build information. See ../licenses/FFMPEG-NOTICE.txt.
 
-Or copy these two files from a Windows FFmpeg 8.1 or newer build into this folder:
-  ffmpeg.exe
-  ffprobe.exe
-then click "Check again" in FRAME (or restart it).
+An explicit FFmpeg path in FRAME Settings takes precedence. Otherwise this
+folder is checked before WinGet and PATH. Other FFmpeg installations are
+not modified. Uninstall removes files installed here by FRAME Setup.
 
-FFmpeg is not included with FRAME. FFmpeg builds carry their own license
-(LGPL or GPL depending on the build); keep the license file that comes with the
-build you use. See ..\licenses\FFMPEG-NOTICE.txt.
-
-Files you copy here are yours: uninstalling FRAME does not remove them.
+For a standalone developer build, place a compatible FFmpeg 8.1+ pair and
+its license here, or select a separate FFmpeg installation in Settings.

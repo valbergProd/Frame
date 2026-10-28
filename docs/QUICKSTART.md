@@ -1,9 +1,9 @@
 # FRAME quickstart
 
-Current development version: 0.6.7-beta. See [repository rename validation](FRAME_067_VALIDATION.md) and the [changelog](CHANGELOG.md) for current status. Older reports describe historical builds.
+Current development version: 0.6.8-beta. See [setup validation](FRAME_068_VALIDATION.md) and the [changelog](CHANGELOG.md) for current status. Older reports describe historical builds.
 
 1. Start `FRAME.exe`. A self-contained build includes the .NET runtime; a framework-dependent build requires the .NET 8 Windows Desktop Runtime, x64.
-2. Install FFmpeg 8.1 or newer with `gfxcapture`, keeping `ffprobe.exe` beside it. FRAME discovers common installations; otherwise choose the executable in Settings. FFmpeg is not bundled.
+2. FRAME Setup prepares FFmpeg automatically (internet required on first install). For standalone developer builds only, install FFmpeg 8.1+ with `gfxcapture` and a matching `ffprobe.exe`; choose it in Settings if it is not detected.
 3. Choose the capture folder and displays. Primary display is the default; deliberate secondary/multiple-display choices are remembered. Desktop audio defaults on, microphone is opt-in.
 4. Choose replay length and start Shadow Recording. Save the last moments with the Capture button or your configured replay hotkey. Only buffered history can be saved. Save wanted clips before stopping Shadow.
 5. Use manual recording for a selected interval, with pause/resume and Stop. Closing FRAME exits and finalizes work; minimizing keeps it in the tray.

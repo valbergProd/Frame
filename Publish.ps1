@@ -19,7 +19,7 @@ try {
     [IO.File]::WriteAllText((Join-Path $OutputDirectory 'README.md'), $quickStart)
     $docsDirectory = Join-Path $OutputDirectory 'docs'
     New-Item -ItemType Directory -Force -Path $docsDirectory | Out-Null
-    foreach ($document in @('ARCHITECTURE.md','LIMITATIONS.md','VALIDATION.md','ACCEPTANCE.md','CHANGELOG.md','UPDATES.md','FRAME_067_VALIDATION.md','FRAME_066_VALIDATION.md','FRAME_065_VALIDATION.md','core-tests.txt','media-validation.json','idle-benchmark.json','interface-dark.png','interface-light.png','interface-hotkeys.png','hotkey-dialog-tests.json')) {
+    foreach ($document in @('ARCHITECTURE.md','LIMITATIONS.md','VALIDATION.md','ACCEPTANCE.md','CHANGELOG.md','UPDATES.md','FRAME_068_VALIDATION.md','FRAME_067_VALIDATION.md','FRAME_066_VALIDATION.md','FRAME_065_VALIDATION.md','core-tests.txt','media-validation.json','idle-benchmark.json','interface-dark.png','interface-light.png','interface-hotkeys.png','hotkey-dialog-tests.json')) {
         $documentPath = Join-Path 'docs' $document
         if (Test-Path -LiteralPath $documentPath) { Copy-Item -LiteralPath $documentPath -Destination $docsDirectory }
     }

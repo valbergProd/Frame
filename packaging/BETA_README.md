@@ -1,4 +1,4 @@
-# FRAME 0.5.4 Beta
+# FRAME 0.6.8 Beta
 
 Thank you for testing FRAME. This guide covers installing, using, troubleshooting and removing the beta.
 
@@ -12,7 +12,7 @@ Thank you for testing FRAME. This guide covers installing, using, troubleshootin
 ## Requirements
 
 - Windows 10 version 2004 (build 19041) or newer, or Windows 11, 64-bit.
-- **FFmpeg 8.1 or newer**, a free video tool that is installed separately. FRAME helps you install it (see below).
+- **Internet access during first setup.** Setup downloads and verifies FFmpeg recording tools automatically.
 - A graphics card with a hardware video encoder is recommended:
   - **NVIDIA (NVENC):** used and tested during development (GeForce RTX 4090).
   - **Intel Quick Sync and AMD (AMF):** detected and offered automatically when your FFmpeg supports them, but **not yet tested** with FRAME.
@@ -21,13 +21,10 @@ Thank you for testing FRAME. This guide covers installing, using, troubleshootin
 
 ## Install
 
-1. Run `FRAME-0.5.4-Beta-Setup.exe`.
+1. Run `FRAME-0.6.8-Beta-Setup.exe`.
 2. Windows SmartScreen may warn that the app is not recognized, because this beta is not code-signed. Choose **More info**, then **Run anyway**, if you received the file from the FRAME team.
 3. Follow the wizard. FRAME installs for your Windows account only (no administrator rights) into `%LOCALAPPDATA%\Programs\FRAME`. You can add a desktop shortcut and start FRAME at the end.
-4. **FFmpeg:** if FFmpeg is missing, the Capture page shows *FFmpeg is needed to record*:
-   - **Install FFmpeg (winget)** opens a window that runs `winget install --id Gyan.FFmpeg --exact --source winget`. Follow it, close it when it is done, then click **Check again**.
-   - Or **Choose ffmpeg.exe…** if you already have FFmpeg 8.1+ (ffprobe.exe must be in the same folder).
-   - Without winget: download a Windows build of FFmpeg 8.1+ (links on ffmpeg.org), unzip it and choose its ffmpeg.exe.
+4. Setup prepares FFmpeg automatically with download progress and checksum verification. If preparation fails, check the connection and free disk space, then retry. Nothing else needs installing after setup.
 
 ## Using FRAME
 
@@ -80,7 +77,7 @@ Run the newer `FRAME-…-Setup.exe`. It finds the existing installation and repl
 
 ## Uninstall
 
-Windows Settings › Apps › Installed apps › **FRAME** › Uninstall (or Start menu › FRAME › right-click › Uninstall). This removes the program, its shortcuts and its Start-with-Windows entry. You are then asked whether to also remove FRAME's settings, logs, thumbnails and recovery files in `%LOCALAPPDATA%\FRAME` (default: keep them). **Your recordings are never removed.** FFmpeg is a separate program; remove it in Installed apps or with `winget uninstall Gyan.FFmpeg` if you no longer need it.
+Windows Settings › Apps › Installed apps › **FRAME** › Uninstall (or Start menu › FRAME › right-click › Uninstall). This removes the program, its shortcuts and its Start-with-Windows entry. You are then asked whether to also remove FRAME's settings, logs, thumbnails and recovery files in `%LOCALAPPDATA%\FRAME` (default: keep them). **Your recordings are never removed.** The private FFmpeg tools installed by Setup are removed with FRAME. Other FFmpeg installations are left alone.
 
 ## Known limitations
 

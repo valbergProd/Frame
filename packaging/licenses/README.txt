@@ -1,4 +1,4 @@
-FRAME 0.5.4 Beta - license and third-party notices
+FRAME Beta - license and third-party notices
 
 FRAME
   FRAME.exe is a beta build for invited testers.
@@ -13,8 +13,9 @@ Microsoft .NET (included)
     dotnet-runtime-THIRD-PARTY-NOTICES.txt    third-party notices for the .NET runtime
     windowsdesktop-runtime-LICENSE.txt        Windows Desktop runtime license (MIT)
 
-FFmpeg (not included)
-  See FFMPEG-NOTICE.txt. FRAME does not contain or distribute FFmpeg.
+FFmpeg (downloaded by Setup)
+  See FFMPEG-NOTICE.txt. Setup downloads recording tools from the publisher.
+  Their own license and build README are retained in FRAME's tools folder.
 
 Installer
   The installer is built with Inno Setup (https://jrsoftware.org/isinfo.php),
