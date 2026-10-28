@@ -34,14 +34,19 @@ try {
     if($beta) {$releaseArgs+='--prerelease'}
     & gh @releaseArgs
     if($LASTEXITCODE -ne 0) {throw 'Release creation failed. Inspect GitHub before retrying; an existing release is never overwritten.'}
-    $json=gh api "repos/$repo/releases/tags/$tag"
+    # Drafts can have an untagged HTML URL and return 404 from the tag endpoint.
+    # Resolve the just-created draft by its explicit tag in the authenticated list.
+    $json=gh api "repos/$repo/releases?per_page=100"
     if($LASTEXITCODE -ne 0) {throw 'Release is still a draft: metadata could not be verified.'}
-    $release=$json | ConvertFrom-Json
+    $releases=$json | ConvertFrom-Json
+    $matching=@($releases | Where-Object { $_.tag_name -ceq $tag -and $_.draft })
+    if($matching.Count -ne 1) {throw 'Expected exactly one matching draft; inspect GitHub before retrying.'}
+    $release=$matching[0]
     $asset=@($release.assets | Where-Object {$_.name -ceq $expected})
     if($asset.Count -ne 1 -or $asset[0].size -ne $file.Length -or $asset[0].digest -cne "sha256:$hash") {throw 'Release is still a draft: uploaded installer size/checksum verification failed.'}
     if($Publish) {
-        gh release edit $tag --repo $repo --draft=false
+        gh api --method PATCH "repos/$repo/releases/$($release.id)" -F draft=false --silent
         if($LASTEXITCODE -ne 0) {throw 'Publication failed; inspect the draft on GitHub.'}
-        Write-Host "Published: $($release.html_url)"
+        Write-Host "Published: https://github.com/$repo/releases/tag/$tag"
     } else {Write-Host "Verified draft: $($release.html_url). Review it before publishing."}
 } finally {Pop-Location}

@@ -40,6 +40,6 @@ Installer releases are available on the [Releases page](https://github.com/valbe
 - `scripts` and `packaging`: installer, validation and release tooling.
 - `docs`: validation reports, design history and release notes.
 
-See the [changelog](docs/CHANGELOG.md), [setup validation](docs/FRAME_068_VALIDATION.md), [updater validation](docs/FRAME_066_VALIDATION.md), [audio validation](docs/FRAME_065_VALIDATION.md) and [stop/shutdown validation](docs/FRAME_064_VALIDATION.md). Tests run in isolated folders under `work`; never use a user's settings or recordings as fixtures. Desktop capture, hardware and installer acceptance still require local Windows testing.
+See the [changelog](docs/CHANGELOG.md), [1.0 release validation](docs/FRAME_100_VALIDATION.md), [setup validation](docs/FRAME_068_VALIDATION.md), [updater validation](docs/FRAME_066_VALIDATION.md), [audio validation](docs/FRAME_065_VALIDATION.md) and [stop/shutdown validation](docs/FRAME_064_VALIDATION.md). Tests run in isolated folders under `work`; never use a user's settings or recordings as fixtures. Desktop capture, hardware and installer acceptance still require local Windows testing.
 
 Older documentation is retained as dated history, including the [previous README](docs/HISTORICAL_README_035.md). Local handover notes, builds, installed test copies and generated recordings are not versioned.
