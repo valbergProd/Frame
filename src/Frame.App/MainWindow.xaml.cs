@@ -60,7 +60,7 @@ public partial class MainWindow : Window
         Backend.OnlyConfiguredPath = di >= 0 && args.Contains("--ffmpeg-only-settings"); // diagnostic runs: simulate "FFmpeg not installed"
         data = di >= 0 ? args[di + 1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FRAME");
         Directory.CreateDirectory(data); configPath = Path.Combine(data, "settings.json");
-        DiagnosticLog.Folder ??= data; DiagnosticLog.Startup(typeof(MainWindow).Assembly.GetName().Version?.ToString(3) + " beta");
+        DiagnosticLog.Folder ??= data; DiagnosticLog.Startup(CurrentRelease.ToString());
         // An unreadable or invalid settings file is kept as settings.json.unreadable-<time> (it would otherwise be replaced by
         // the defaults at the next save) and logged; FRAME starts with default settings.
         try { settings = SettingsStore.Load(configPath); }

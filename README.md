@@ -1,8 +1,8 @@
 # FRAME
 
-FRAME is a Windows screen recorder with disk-backed Shadow Recording, manual recording, a clip library and trimming. Save the last moments of your selected displays without starting a separate recording beforehand.
+FRAME is a Windows screen recorder with disk-backed Shadow Recording, manual recording, a clip library and trimming. Save the last moments of your selected displays without starting a separate recording beforehand. [Download setup](https://github.com/valbergProd/Frame/releases/download/v1.0.0/FRAME-1.0.0-Setup.exe).
 
-**Current development version: 0.6.8-beta.** FRAME is in beta; this repository is not a declaration of a finished 1.0 release.
+**Current release: 1.0.0.** Windows x64.
 
 ## Features
 
@@ -27,7 +27,7 @@ Always use a new output folder. Settings and diagnostic logs live in `%LOCALAPPD
 
 ## Releases and updates
 
-Installer releases will appear on the [Releases page](https://github.com/valbergProd/Frame/releases). The initial source upload does not include a new setup package. In the app, open **Settings > General > Check for updates**. Downloads and installation require your choice; recording must be stopped before installing.
+Installer releases are available on the [Releases page](https://github.com/valbergProd/Frame/releases). In the app, open **Settings > General > Check for updates**. Downloads and installation require your choice; recording must be stopped before installing.
 
 [Update and release workflow](docs/UPDATES.md) explains how a reviewed code change becomes an installable update. A Git push alone never distributes a new executable.
 

@@ -1,6 +1,6 @@
-# FRAME 0.6.8 Beta
+# FRAME 1.0.0
 
-Thank you for testing FRAME. This guide covers installing, using, troubleshooting and removing the beta.
+This guide covers installing, using, troubleshooting and removing FRAME.
 
 ## What FRAME does
 
@@ -21,8 +21,8 @@ Thank you for testing FRAME. This guide covers installing, using, troubleshootin
 
 ## Install
 
-1. Run `FRAME-0.6.8-Beta-Setup.exe`.
-2. Windows SmartScreen may warn that the app is not recognized, because this beta is not code-signed. Choose **More info**, then **Run anyway**, if you received the file from the FRAME team.
+1. Run `FRAME-1.0.0-Setup.exe`.
+2. Windows SmartScreen may warn that the app is not recognized, because the installer is not code-signed. Choose **More info**, then **Run anyway**, if you received the file from the FRAME team.
 3. Follow the wizard. FRAME installs for your Windows account only (no administrator rights) into `%LOCALAPPDATA%\Programs\FRAME`. You can add a desktop shortcut and start FRAME at the end.
 4. Setup prepares FFmpeg automatically with download progress and checksum verification. If preparation fails, check the connection and free disk space, then retry. Nothing else needs installing after setup.
 
@@ -69,7 +69,7 @@ Please include:
 5. The approximate time it happened.
 6. The diagnostics ZIP, if you are comfortable sharing it.
 
-Send it through the channel you received this beta from (for example the e-mail or Discord conversation). You do not need to include any personal information.
+Report issues at https://github.com/valbergProd/Frame/issues. You do not need to include any personal information.
 
 ## Upgrade
 

@@ -1,29 +1,26 @@
-# FRAME 0.6.8 Beta · release notes
+# FRAME 1.0.0
 
-Windows 10 2004+ / Windows 11, x64. Per-user setup; no administrator rights.
+First stable release of FRAME for Windows x64.
 
-## Installation
+## Download and install
 
-Setup now downloads and verifies FFmpeg 8.1.2 recording tools automatically.
-Users can start FRAME after setup without a separate FFmpeg installation.
-The first installation needs internet access. Upgrades reuse an identical,
-verified private copy. Failed downloads can be retried before FRAME files
-are changed. Settings and recordings are preserved. Uninstall removes the
-recording tools installed with FRAME, leaving other FFmpeg installations alone.
+Download **FRAME-1.0.0-Setup.exe** below and run it. Setup installs FRAME for your Windows account and automatically downloads and verifies FFmpeg recording tools. Internet access is required the first time; there is no separate FFmpeg installation to perform afterward.
 
-## Included improvements since 0.5.4
+## Features
 
-- Primary-display default with remembered display and startup preferences.
-- Bounded shutdown and reliable Stop when the captured display is still.
-- Replay audio join and trim timing fixes.
-- Five visual modes and in-app update checks from valbergProd/Frame.
-- Shadow Recording, manual pause/resume, Library, trimming and Crop for social.
+- Shadow Recording: save the last moments of your selected displays.
+- Manual recording with pause and resume.
+- Clip library, trimming and Crop for social.
+- Primary-display default and remembered recording/startup preferences.
+- Desktop and microphone audio with hardware encoding when supported.
+- Five visual modes and in-app update checks.
 
-## Known limits
+## Upgrading
 
-This is a beta, tested on one NVIDIA Windows PC. Broader hardware, Windows 10,
-long sessions and physical sleep/lock acceptance remain separate work. The
-installer is not code-signed, so Windows SmartScreen may show a warning.
-A published-release-to-newer-release upgrade still needs end-to-end acceptance.
+Quit FRAME before running Setup. Your settings, hotkeys and saved recordings are preserved. Builds with in-app updates can find this release under Settings > General > Check for updates.
 
-See BETA_README.md and licenses/FFMPEG-NOTICE.txt for setup and third-party details.
+## Requirements and notes
+
+Windows 10 version 2004 or later, or Windows 11, x64. The .NET runtime is included. The installer is currently unsigned, so Windows SmartScreen may show a warning. Validation was performed on an NVIDIA Windows PC; broader hardware and clean-machine testing remain ongoing.
+
+No telemetry or automatic recording uploads. Report issues at https://github.com/valbergProd/Frame/issues.

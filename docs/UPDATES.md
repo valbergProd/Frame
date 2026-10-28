@@ -15,12 +15,12 @@ The app contains no GitHub credentials. Checks use GitHub's public releases API;
 ## Publish an update
 
 1. Update the application version and release notes. Build and run the appropriate local tests. Push the reviewed source to `main`; GitHub Actions builds the solution and runs the deterministic Core tests. Desktop/capture validation still runs locally.
-2. Build a new installer with `scripts/Build-BetaInstaller.ps1`. Keep the existing installer AppId. Use `FRAME-<numeric version>-Beta-Setup.exe` for beta releases, or `FRAME-<numeric version>-Setup.exe` for stable releases. The current builder defaults to beta naming; adapt its explicit output naming before the first stable release.
-3. Tag the matching reviewed commit, for example `git tag v0.6.7-beta`, and push the tag with `git push origin v0.6.7-beta`.
-4. Run `scripts/Publish-GitHubRelease.ps1 -Installer <path> -Version 0.6.7-beta -NotesFile <notes.txt>`. It requires a clean checkout, verifies the source tag on the remote, uploads a **draft**, and compares GitHub's size/digest with the local installer. `-Preview` only validates local inputs. Existing releases are never replaced.
+2. Build a new installer with `scripts/Build-BetaInstaller.ps1`. Keep the existing installer AppId. Use `FRAME-<numeric version>-Beta-Setup.exe` for beta releases, or `FRAME-<numeric version>-Setup.exe` for stable releases. The builder follows the project InformationalVersion by default; -Channel Stable or -Channel Beta selects the naming explicitly. Its legacy script filename is retained.
+3. Tag the matching reviewed commit, for example `git tag v1.0.0`, and push the tag with `git push origin v1.0.0`.
+4. Run `scripts/Publish-GitHubRelease.ps1 -Installer <path> -Version 1.0.0 -NotesFile <notes.txt>`. It requires a clean checkout, verifies the source tag on the remote, uploads a **draft**, and compares GitHub's size/digest with the local installer. `-Preview` only validates local inputs. Existing releases are never replaced.
 5. Review the draft and publish it on GitHub. Alternatively, add `-Publish` when deliberately creating and publishing a new release in one operation. Only a published release with a matching installer reaches the updater.
 
-Pushing code alone does not ship an app update. The initial repository upload does not publish an installer. End-to-end installation of a newer official release must be qualified when that installer is prepared. Keep version numbers increasing; do not replace an already published installer with different bytes under the same version.
+Pushing code alone does not ship an app update. Release 1.0.0 is the first stable installer. Validate upgrade behavior and the public feed before announcing subsequent releases. Keep version numbers increasing; do not replace an already published installer with different bytes under the same version.
 
 ## Recording tools in Setup (0.6.8+)
 

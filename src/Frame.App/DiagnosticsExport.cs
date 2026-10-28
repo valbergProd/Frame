@@ -99,7 +99,7 @@ static class DiagnosticsExport
         var exe = Environment.ProcessPath ?? "";
         string build = File.Exists(exe) ? System.Diagnostics.FileVersionInfo.GetVersionInfo(exe).ProductVersion + $" (exe built {File.GetLastWriteTimeUtc(exe):u})" : "unknown";
         s.AppendLine($"FRAME diagnostics · exported {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}");
-        s.AppendLine($"FRAME {DiagnosticLog.Version} beta · build {build}");
+        s.AppendLine($"FRAME {DiagnosticLog.Version} · build {build}");
         s.AppendLine($"Installed at: {AppContext.BaseDirectory}");
         s.AppendLine();
         s.AppendLine("System");

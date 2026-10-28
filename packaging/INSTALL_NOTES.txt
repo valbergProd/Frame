@@ -1,4 +1,4 @@
-FRAME 0.6.8 Beta
+FRAME 1.0.0
 
 FRAME keeps the last minutes of your screen (Shadow Recording) so you can save a clip with a hotkey after something happens, records manually, and has a Library with trimming and "Crop for social".
 
@@ -9,6 +9,6 @@ Before you install:
 - FFmpeg is third-party software licensed under GPL v3; its license and build information are installed in FRAME's tools folder. See licenses/FFMPEG-NOTICE.txt for the publisher and source links.
 - Your settings and logs are kept in %LOCALAPPDATA%\FRAME and your recordings in your Videos\FRAME folder (or the folder you choose). Installing, upgrading or uninstalling FRAME never deletes your recordings.
 - No telemetry or automatic crash uploads. Setup downloads recording tools from GitHub, and FRAME can check GitHub for updates. If something goes wrong you can export a diagnostics ZIP yourself (Settings > Advanced > Export diagnostics) and decide whether to share it.
-- This beta is not code-signed, so Windows SmartScreen may warn before it starts ("More info" > "Run anyway").
+- The installer is not code-signed, so Windows SmartScreen may warn before it starts ("More info" > "Run anyway").
 
 If FRAME is running, quit it first (right-click the tray icon > Quit FRAME).

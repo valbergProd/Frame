@@ -1,3 +1,10 @@
+# FRAME 1.0.0 · first stable GitHub release · 28 October 2026
+
+- Promoted to 1.0.0 at the user's request, with stable app/installer version metadata and release naming.
+- Windows setup prepares FFmpeg automatically. Existing settings, recordings and startup preferences are preserved.
+- README opens with a direct Download setup link. Stable installs receive stable updates; beta users can upgrade to 1.0.0.
+- Removed hardcoded beta labels from startup/export diagnostics. Recording and media behavior is unchanged from the validated 0.6.8 build.
+
 # FRAME 0.6.8 · FFmpeg prepared by Setup · 28 October 2026
 
 - Setup automatically downloads and verifies FFmpeg 8.1.2 recording tools into FRAME's private tools folder. No separate installation after launch; no winget or administrator rights required.

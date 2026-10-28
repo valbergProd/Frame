@@ -1,5 +1,5 @@
-; FRAME beta installer (Inno Setup 6). Built by scripts\Build-BetaInstaller.ps1, which passes:
-;   /DAppVersion=0.5.4  /DFileVersion=0.5.4.0  /DVersionLabel="0.5.4 Beta"
+; FRAME installer (Inno Setup 6). Built by scripts\Build-BetaInstaller.ps1, which passes:
+;   /DAppVersion=1.0.0  /DFileVersion=1.0.0.0  /DVersionLabel="1.0.0"
 ;   /DSourceExe=<published FRAME.exe>  /DOutputDir=<release folder>  /DRepoRoot=<repository>  /DWizardImages=<generated .bmp list>
 ; Per-user install (no administrator rights): %LOCALAPPDATA%\Programs\FRAME. Settings/logs (%LOCALAPPDATA%\FRAME) and
 ; recordings (Videos\FRAME or the chosen folder) are never touched by install or upgrade; uninstall asks before it removes
@@ -12,13 +12,13 @@
   #define FileVersion AppVersion + ".0"
 #endif
 #ifndef VersionLabel
-  #define VersionLabel AppVersion + " Beta"
+  #define VersionLabel AppVersion
 #endif
 #ifndef RepoRoot
   #define RepoRoot ".."
 #endif
 #ifndef OutputBase
-  #define OutputBase "FRAME-" + AppVersion + "-Beta-Setup"
+  #define OutputBase "FRAME-" + AppVersion + "-Setup"
 #endif
 #define FfmpegManifest RepoRoot + "\packaging\ffmpeg.ini"
 #define FfmpegVersion ReadIni(FfmpegManifest, "Package", "Version", "")
@@ -100,7 +100,7 @@ Source: "{tmp}\frame-ffmpeg\ffmpeg.exe"; DestDir: "{app}\tools"; Flags: external
 Source: "{tmp}\frame-ffmpeg\ffprobe.exe"; DestDir: "{app}\tools"; Flags: external ignoreversion; Check: InstallFfmpeg; ExternalSize: 242291712
 Source: "{tmp}\frame-ffmpeg\FFMPEG-LICENSE.txt"; DestDir: "{app}\tools"; Flags: external ignoreversion; Check: InstallFfmpeg; ExternalSize: 35147
 Source: "{tmp}\frame-ffmpeg\FFMPEG-README.txt"; DestDir: "{app}\tools"; Flags: external ignoreversion; Check: InstallFfmpeg; ExternalSize: 45280
-Source: "{#RepoRoot}\packaging\BETA_README.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#RepoRoot}\packaging\BETA_README.md"; DestDir: "{app}"; DestName: "README.md"; Flags: ignoreversion
 Source: "{#RepoRoot}\packaging\RELEASE_NOTES.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#RepoRoot}\packaging\licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion
 Source: "{#RepoRoot}\packaging\tools\README.txt"; DestDir: "{app}\tools"; Flags: ignoreversion

@@ -5,9 +5,10 @@
     [string]$Version = '',
     [string]$Label = '',
     [string]$OutputRoot = '',
-    [switch]$ValidationBuild
+    [switch]$ValidationBuild,
+    [ValidateSet('Auto','Beta','Stable')][string]$Channel = 'Auto'
 )
-# FRAME beta installer build. Usage (from any folder):
+# FRAME installer build (legacy script name retained). Auto follows the project's release channel.
 #   powershell -ExecutionPolicy Bypass -File C:\dev\Frame\scripts\Build-BetaInstaller.ps1
 # Steps: version from src\Frame.App\Frame.App.csproj -> check dotnet + Inno Setup 6 -> self-contained win-x64 single-file
 # publish into a NEW release folder (never overwrites) -> verify FRAME.exe (version, size, embedded resources via a quick
@@ -22,7 +23,9 @@ if (-not $projectVersion) { throw "No <Version> in $csproj" }
 # .NET runtime bundled into the self-contained FRAME.exe (Frame.App.csproj BundledRuntimeVersion; checked in the smoke test)
 $bundledRuntime = ([xml](Get-Content -LiteralPath $csproj -Raw)).Project.PropertyGroup.BundledRuntimeVersion | Where-Object { $_ } | Select-Object -First 1
 if (-not $Version) { $Version = $projectVersion }
-if (-not $Label) { $Label = "$Version Beta" }
+$informationalVersion = ([xml](Get-Content -LiteralPath $csproj -Raw)).Project.PropertyGroup.InformationalVersion | Where-Object { $_ } | Select-Object -First 1
+$beta = $Channel -eq 'Beta' -or ($Channel -eq 'Auto' -and $informationalVersion -match '-beta')
+if (-not $Label) { $Label = $Version + $(if ($beta) { ' Beta' } else { '' }) }
 $fileVersion = ($Version -replace '[^0-9.]', '') + '.0'
 if (($fileVersion.Split('.')).Count -gt 4) { $fileVersion = ($fileVersion.Split('.')[0..3]) -join '.' }
 
@@ -104,7 +107,7 @@ foreach ($scale in 1, 2) {
 }
 
 # Installer
-$base = "FRAME-$Version-Beta-Setup"
+$base = "FRAME-$Version" + $(if ($beta) { '-Beta' } else { '' }) + '-Setup'
 $validationArgs = @()
 if ($ValidationBuild) { $validationArgs = @('/DValidationBuild'); $base += '-Validation' }
 & $iscc @validationArgs "/DAppVersion=$Version" "/DFileVersion=$fileVersion" "/DVersionLabel=$Label" "/DSourceExe=$exe" "/DOutputDir=$release" "/DRepoRoot=$repo" "/DOutputBase=$base" "/DWizardImages=$($images -join ',')" "/DWizardLargeImages=$($large -join ',')" (Join-Path $repo 'packaging\FRAME.iss')
@@ -118,7 +121,8 @@ if ("$($setupInfo.ProductName)".Trim() -ne 'FRAME' -or "$($setupInfo.FileVersion
 # Checksums and documents
 $hash = (Get-FileHash -Algorithm SHA256 $setup).Hash
 "$hash  $base.exe" | Set-Content -LiteralPath "$setup.sha256.txt" -Encoding ASCII
-Copy-Item (Join-Path $repo 'packaging\BETA_README.md'), (Join-Path $repo 'packaging\RELEASE_NOTES.md') $release
+Copy-Item (Join-Path $repo 'packaging\BETA_README.md') (Join-Path $release 'README.md')
+Copy-Item (Join-Path $repo 'packaging\RELEASE_NOTES.md') $release
 Copy-Item (Join-Path $repo 'packaging\licenses') (Join-Path $release 'licenses') -Recurse
 $buildInfo = [ordered]@{
     product = 'FRAME'; version = $Version; label = $Label; fileVersion = $fileVersion; built = (Get-Date).ToString('o')
@@ -127,6 +131,7 @@ $buildInfo = [ordered]@{
     tools = [ordered]@{ dotnet = $(if ($SourceExe) { 'not used (given exe)' } else { (& dotnet --version) }); bundledRuntime = $(if ($SourceExe) { 'see smokeTest' } else { $bundledRuntime }); innoSetup = $innoVersion }
     smokeTest = $smokeLog
     validationOnly = [bool]$ValidationBuild
+    channel = $(if ($beta) { 'beta' } else { 'stable' })
     ffmpegManifestSha256 = (Get-FileHash (Join-Path $repo 'packaging\ffmpeg.ini')).Hash
 }
 $buildInfo | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $release 'build-info.json') -Encoding UTF8

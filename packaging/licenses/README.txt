@@ -1,9 +1,8 @@
-FRAME Beta - license and third-party notices
+FRAME - license and third-party notices
 
 FRAME
-  FRAME.exe is a beta build for invited testers.
-  Copyright (c) 2026 the FRAME developer. All rights reserved; no license to
-  redistribute is granted with this beta.
+  Copyright (c) 2026 the FRAME developer. All rights reserved.
+  Third-party components below retain their own license terms.
 
 Microsoft .NET (included)
   FRAME.exe is a self-contained .NET 8 application. It includes the Microsoft
