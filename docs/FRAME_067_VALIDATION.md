@@ -16,6 +16,7 @@ Date: 2026-10-28. The user changed their GitHub username to `valbergProd` and re
 - Final EXE update UI diagnostics: 6/6; Dark-mode render visually checked, including the 0.6.7-beta version label.
 - Built Core updater queried `valbergProd/Frame` without credentials: success, no newer installer available (the release feed is currently empty).
 - Release publisher PowerShell syntax check: passed. No old owner remains in active source, tests, scripts or operational update links.
+- Pushed source commit `05212c8f97c84f812840c7dd46d73691c6f1d904` to the new origin. [GitHub Actions run 40762158827](https://github.com/valbergProd/Frame/actions/runs/40762158827) passed its Windows build and Core regression tests. A documentation-only follow-up records this result with `[skip ci]`.
 
 Evidence directory: `work/rename-067` (local, ignored). All diagnostic settings and output use that directory; user data and the running app are untouched.
 
