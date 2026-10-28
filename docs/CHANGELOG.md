@@ -1,5 +1,7 @@
 # FRAME 1.0.0 · first stable GitHub release · 28 October 2026
 
+- Repository maintenance after release: personal agent files were removed from all published branch/tag history, with local copies retained. App/release bytes are unchanged; see `HISTORY_CLEANUP.md` for verification and the GitHub cache limitation.
+
 - Promoted to 1.0.0 at the user's request, with stable app/installer version metadata and release naming.
 - Windows setup prepares FFmpeg automatically. Existing settings, recordings and startup preferences are preserved.
 - README opens with a direct Download setup link. Stable installs receive stable updates; beta users can upgrade to 1.0.0.

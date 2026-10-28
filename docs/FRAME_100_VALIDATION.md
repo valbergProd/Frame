@@ -29,6 +29,6 @@ GitHub initially exposed the uploaded draft only through the authenticated relea
 
 ## Private files and limits
 
-AGENTS.md and CLAUDE.md were removed from tracking and ignored; their local copies remain. Handover_files was already ignored and was never included in this repository's tracked source. No such files are in the v1.0.0 tree. Existing older commits still retain previously tracked agent instructions; history was not rewritten. Product docs and validation reports remain public.
+AGENTS.md and CLAUDE.md were removed from tracking and ignored; their local copies remain. Handover_files was already ignored and was never included in this repository's tracked source. At the user's subsequent request, all published history was rewritten to remove the agent files; v1.0.0 now points to d4efa4b7aef99187a2f92bacfb0d43c12376cdc2 with the same file tree and installer. Original commit identifiers above describe build provenance before rewriting. See HISTORY_CLEANUP.md for verification and the remaining GitHub cache limitation. Product docs and validation reports remain public.
 
 Evidence is local under `work/release-100`, plus the artifact's build-info.json. Not a clean-VM/Windows 10 or broader hardware qualification. The real user's production installation and normal update UI were not driven end to end: public download, helper handoff and isolated installer upgrade were verified separately. Signing and wider hardware acceptance remain outstanding as disclosed in release notes.
