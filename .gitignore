@@ -34,5 +34,7 @@ work/
 .agents/
 .aws/
 /Handover_files/
+/AGENTS.md
+/CLAUDE.md
 /FRAME_CODEX_IMPLEMENTATION_PROMPT.md
 /README_START_HERE.md
