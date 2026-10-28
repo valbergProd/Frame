@@ -2,7 +2,7 @@
 
 FRAME is a Windows screen recorder with disk-backed Shadow Recording, manual recording, a clip library and trimming. Save the last moments of your selected displays without starting a separate recording beforehand.
 
-**Current development version: 0.6.7-beta.** FRAME is in beta; this repository is not a declaration of a finished 1.0 release. FRAME Advanced Capture is a separate product and is not included here.
+**Current development version: 0.6.7-beta.** FRAME is in beta; this repository is not a declaration of a finished 1.0 release.
 
 ## Features
 
