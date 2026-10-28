@@ -1,6 +1,6 @@
 # FRAME quickstart
 
-Current development version: 0.6.6-beta. See [update validation](FRAME_066_VALIDATION.md) and the [changelog](CHANGELOG.md) for current status. Older reports describe historical builds.
+Current development version: 0.6.7-beta. See [repository rename validation](FRAME_067_VALIDATION.md) and the [changelog](CHANGELOG.md) for current status. Older reports describe historical builds.
 
 1. Start `FRAME.exe`. A self-contained build includes the .NET runtime; a framework-dependent build requires the .NET 8 Windows Desktop Runtime, x64.
 2. Install FFmpeg 8.1 or newer with `gfxcapture`, keeping `ffprobe.exe` beside it. FRAME discovers common installations; otherwise choose the executable in Settings. FFmpeg is not bundled.

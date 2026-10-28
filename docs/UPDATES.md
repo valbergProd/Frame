@@ -1,6 +1,6 @@
 # Source and app updates
 
-Source and public installer releases live at https://github.com/torsteinvalberg/Frame.
+Source and public installer releases live at https://github.com/valbergProd/Frame.
 
 ## In FRAME
 

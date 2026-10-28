@@ -8,7 +8,7 @@ namespace Frame.App;
 
 public partial class MainWindow
 {
-    internal const string UpdateRepository = "torsteinvalberg/Frame";
+    internal const string UpdateRepository = "valbergProd/Frame";
     static readonly HttpClient updateClient = AppUpdates.CreateClient();
     static ReleaseVersion CurrentRelease => ReleaseVersion.Parse(typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion.Split('+')[0])!;
     AppUpdate? availableUpdate;

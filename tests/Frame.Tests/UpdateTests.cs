@@ -7,7 +7,7 @@ internal static class UpdateTests
 {
     internal static void Run(Action<string, Action> test, Action<bool> assert, Action<Action> throws, string folder)
     {
-        const string repo = "torsteinvalberg/Frame";
+        const string repo = "valbergProd/Frame";
         var beta = ReleaseVersion.Parse("0.6.6-beta")!; var stable = ReleaseVersion.Parse("0.6.6")!;
         byte[] payload = [0x4d, 0x5a, 1, 2, 3, 4]; string sha = Convert.ToHexString(SHA256.HashData(payload));
         object Release(string tag, bool pre = true, bool draft = false, string? digest = null, string? url = null, long? size = null, bool installer = true)

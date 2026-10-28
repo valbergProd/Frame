@@ -28,7 +28,7 @@ internal static class UpdateDiagnostics
         await Check("Wrong installer version blocks execution", ticket with { Version = "99.0.0" }, false);
         await Check("Installer outside ticket directory is rejected", ticket with { Installer = fixture }, false);
         string handoff = Path.Combine(folder, "handoff.json");
-        var update = new AppUpdate(ReleaseVersion.Parse(number + "-beta")!, new Uri("https://github.com/torsteinvalberg/Frame"), new Uri("https://github.com/torsteinvalberg/Frame"), Path.GetFileName(destination), ticket.Size, hash);
+        var update = new AppUpdate(ReleaseVersion.Parse(number + "-beta")!, new Uri("https://github.com/valbergProd/Frame"), new Uri("https://github.com/valbergProd/Frame"), Path.GetFileName(destination), ticket.Size, hash);
         UpdateInstaller.Start(destination, update, handoff);
         await Task.Delay(1500);
         checks.Add(new { name = "Helper waits while parent FRAME is alive", passed = !File.Exists(handoff), error = (string?)null });

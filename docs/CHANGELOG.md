@@ -1,3 +1,8 @@
+# FRAME 0.6.7 · GitHub account rename · 28 October 2026 (not packaged as an installer)
+
+- Update checks, release download validation and release publishing now use `valbergProd/Frame`, following the owner's GitHub username change. Operational links and the local Git origin were updated.
+- New self-contained build; recording, settings and installer behavior are unchanged. See `FRAME_067_VALIDATION.md` for verification.
+
 # FRAME 0.6.6 · GitHub source and in-app updates · 28 October 2026 (not packaged as an installer)
 
 - Source and installer releases use the public `torsteinvalberg/Frame` GitHub repository. Future pushes build and run Core tests on GitHub Actions; source pushes do not automatically publish an app update.

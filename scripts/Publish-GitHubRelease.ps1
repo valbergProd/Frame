@@ -8,7 +8,7 @@ param(
 # Upload a reviewed installer as a draft; -Publish explicitly makes it visible to FRAME's updater.
 # Does not build, replace an existing release, or push source changes. Commit/push and tag the matching source first.
 $ErrorActionPreference = 'Stop'
-$repo='torsteinvalberg/Frame'
+$repo='valbergProd/Frame'
 $root=Split-Path -Parent $PSScriptRoot
 if($Version -notmatch '^\d+\.\d+\.\d+(-beta(\.\d+)?)?$') {throw 'Use a release version such as 0.6.6-beta or 1.0.0.'}
 $numeric=$Version -replace '-.*$',''
