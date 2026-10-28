@@ -7,6 +7,9 @@ param(
 # Setup stages only these four known entries before changing any installed files.
 # No PATH/registry/settings changes, archive-wide extraction, or package-manager dependency.
 $ErrorActionPreference = 'Stop'
+# Setup can inherit PowerShell 7's PSModulePath through its launching app/shell.
+# This helper runs in Windows PowerShell 5.1 and needs only its inbox modules.
+$env:PSModulePath = [IO.Path]::Combine($PSHOME, 'Modules')
 try {
     $package = @{}
     foreach ($line in [IO.File]::ReadAllLines($Manifest)) {
