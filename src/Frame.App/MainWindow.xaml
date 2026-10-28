@@ -1,0 +1,178 @@
+﻿<Window x:Class="Frame.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Frame.App" Title="FRAME" Width="1280" Height="800" MinWidth="930" MinHeight="690" Background="{DynamicResource Background}" Foreground="{DynamicResource Text}" FontFamily="Segoe UI" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize" UseLayoutRounding="True">
+ <Window.Resources>
+  <!-- Sidebar navigation: the active item is framed by four thin, open corners like the FRAME logo. The frame is a
+       content-sized Grid (HorizontalAlignment Left) around the icon + label, so its right corners follow the end of the
+       text and its size follows the rendered font/DPI; the corners are fixed-size Paths aligned to that Grid's corners,
+       optically centred on the rendered icon + label ink by NavCorners.CentreOnInk (glyph bearings / line leading).
+       No background, edge bar, dot or selection box. The whole row stays the hit area. Focus: no template trigger (that
+       showed after mouse clicks too); keyboard focus uses NavigationFocus (FocusVisualStyle = keyboard only): a dotted underline, so it never reads as a selection box. -->
+  <Style x:Key="NavigationFocus"><Setter Property="Control.Template"><Setter.Value><ControlTemplate><Rectangle Height="1" VerticalAlignment="Bottom" Margin="16,0,24,8" Stroke="{DynamicResource Muted}" StrokeThickness="1" StrokeDashArray="1 2" Opacity=".8" SnapsToDevicePixels="True"/></ControlTemplate></Setter.Value></Setter></Style>
+  <Style x:Key="NavigationButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="{DynamicResource Subtle}"/><Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Height" Value="52"/><Setter Property="FontSize" Value="16"/><Setter Property="Margin" Value="0,0,0,12"/><Setter Property="Padding" Value="10,7"/><Setter Property="FocusVisualStyle" Value="{StaticResource NavigationFocus}"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Grid Background="Transparent">
+    <!-- Left 6 + Padding 10 keeps the icon/text at x 16 as before. -->
+    <Grid x:Name="Framed" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="6,0,0,0" local:NavCorners.CentreOnInk="True">
+     <Grid x:Name="Corners" Opacity="0" IsHitTestVisible="False" SnapsToDevicePixels="True">
+      <Path HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="{DynamicResource NavFrame}" StrokeThickness="1" Data="M 0.5,7 L 0.5,0.5 7,0.5"/>
+      <Path HorizontalAlignment="Right" VerticalAlignment="Top" Stroke="{DynamicResource NavFrame}" StrokeThickness="1" Data="M 0,0.5 L 6.5,0.5 6.5,7"/>
+      <Path HorizontalAlignment="Left" VerticalAlignment="Bottom" Stroke="{DynamicResource NavFrame}" StrokeThickness="1" Data="M 0.5,0 L 0.5,6.5 7,6.5"/>
+      <Path HorizontalAlignment="Right" VerticalAlignment="Bottom" Stroke="{DynamicResource NavFrame}" StrokeThickness="1" Data="M 6.5,0 L 6.5,6.5 0,6.5"/>
+     </Grid>
+     <ContentPresenter x:Name="Label" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+    </Grid>
+   </Grid><ControlTemplate.Triggers>
+    <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsMouseOver" Value="True"/><Condition Property="Tag" Value="{x:Null}"/></MultiTrigger.Conditions><Setter TargetName="Corners" Property="Opacity" Value=".16"/></MultiTrigger>
+    <Trigger Property="Tag" Value="Selected"><Setter TargetName="Corners" Property="Opacity" Value=".42"/></Trigger>
+    <Trigger Property="IsPressed" Value="True"><Setter TargetName="Label" Property="Opacity" Value=".75"/></Trigger>
+   </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+   <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource Text}"/></Trigger><Trigger Property="Tag" Value="Selected"><Setter Property="Foreground" Value="{DynamicResource NavActive}"/></Trigger></Style.Triggers></Style>
+  <!-- 0.6.0 modes other than Original GUI: the active item has a short accent bar at the window's left edge (Cinematic D
+       reference); no corner frame. Same row, hit area, font and keyboard focus cue as NavigationButton. -->
+  <Style x:Key="ModeNavigationButton" TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Grid Background="Transparent">
+    <Rectangle x:Name="Bar" Width="3" Height="38" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-22,0,0,0" Fill="{DynamicResource Accent}" Opacity="0" RadiusX="1.5" RadiusY="1.5" IsHitTestVisible="False"/>
+    <ContentPresenter x:Name="Label" Margin="16,7,10,7" VerticalAlignment="Center"/>
+   </Grid><ControlTemplate.Triggers>
+    <MultiTrigger><MultiTrigger.Conditions><Condition Property="IsMouseOver" Value="True"/><Condition Property="Tag" Value="{x:Null}"/></MultiTrigger.Conditions><Setter TargetName="Bar" Property="Opacity" Value=".28"/></MultiTrigger>
+    <Trigger Property="Tag" Value="Selected"><Setter TargetName="Bar" Property="Opacity" Value="1"/></Trigger>
+    <Trigger Property="IsPressed" Value="True"><Setter TargetName="Label" Property="Opacity" Value=".75"/></Trigger>
+   </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <!-- Title-bar mode links (0.6.0; all five at once since 0.6.1): understated text buttons, no tooltip; keyboard focus =
+       dotted underline; the active mode (Tag "Active") has the brighter Text colour, the others Muted. -->
+  <Style x:Key="ModeLink" TargetType="Button">
+   <Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="FontSize" Value="11"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Padding" Value="8,0"/><Setter Property="FocusVisualStyle" Value="{StaticResource QuietFocus}"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="Transparent" Padding="{TemplateBinding Padding}"><ContentPresenter VerticalAlignment="Center"/></Border><ControlTemplate.Triggers>
+    <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource Text}"/></Trigger>
+    <Trigger Property="IsPressed" Value="True"><Setter Property="Opacity" Value=".7"/></Trigger>
+   </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+   <Style.Triggers><Trigger Property="Tag" Value="Active"><Setter Property="Foreground" Value="{DynamicResource Text}"/></Trigger></Style.Triggers>
+  </Style>
+  <Style x:Key="Secondary" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Height" Value="66"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="Padding" Value="12,8"/></Style>
+
+  <Style x:Key="QuietButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="FontSize" Value="11"/><Setter Property="Padding" Value="8,6"/></Style>
+  <Style x:Key="RecordingAction" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+   <Setter Property="Background" Value="{DynamicResource Hero}"/><Setter Property="BorderBrush" Value="{DynamicResource Line}"/><Setter Property="BorderThickness" Value="1"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Grid>
+    <local:RecordingGlow x:Name="Glow" Margin="-32" IsHitTestVisible="False"/>
+    <Border x:Name="Face" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+   </Grid><ControlTemplate.Triggers>
+    <!-- 0.5.5: manual recording is secondary: neutral graphite edge at rest; hover/focus lift the edge to Muted; only an
+         actual recording turns it warm (accent edge and glow). -->
+    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Face" Property="BorderBrush" Value="{DynamicResource Muted}"/></Trigger>
+    <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Face" Property="BorderBrush" Value="{DynamicResource Muted}"/><Setter TargetName="Face" Property="BorderThickness" Value="2"/></Trigger>
+    <Trigger Property="Tag" Value="Active"><Setter TargetName="Glow" Property="Active" Value="True"/><Setter TargetName="Face" Property="Background" Value="{DynamicResource ActiveCaptureFace}"/><Setter TargetName="Face" Property="BorderBrush" Value="{DynamicResource Accent}"/><Setter TargetName="Face" Property="BorderThickness" Value="2"/></Trigger>
+    <Trigger Property="IsPressed" Value="True"><Setter TargetName="Face" Property="Opacity" Value=".8"/></Trigger>
+    <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Face" Property="Opacity" Value=".5"/></Trigger>
+   </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+  </Style>
+ </Window.Resources>
+ <WindowChrome.WindowChrome><WindowChrome CaptionHeight="36" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/></WindowChrome.WindowChrome>
+ <Grid ClipToBounds="True" Background="{DynamicResource Background}"><Grid.RowDefinitions><RowDefinition Height="36"/><RowDefinition/></Grid.RowDefinitions>
+ <Border x:Name="DesertBackdrop" Grid.RowSpan="2" Margin="-4" IsHitTestVisible="False"/>
+ <!-- Static shade over the brightest (upper-right) part of the artwork: up to ~18 % darker there, fading to nothing, so the
+      warm palette and dune shapes stay and the obsidian stone remains the brightest focus. Dark theme only (see ApplyTheme). -->
+ <Border x:Name="DesertShade" Grid.RowSpan="2" Margin="-4" IsHitTestVisible="False"><Border.Background><RadialGradientBrush Center="0.84,0.06" GradientOrigin="0.84,0.06" RadiusX="0.58" RadiusY="0.62"><GradientStop Color="#2E000000" Offset="0"/><GradientStop Color="#22000000" Offset="0.4"/><GradientStop Color="#0C000000" Offset="0.72"/><GradientStop Color="#00000000" Offset="1"/></RadialGradientBrush></Border.Background></Border>
+ <!-- Living desert (CaptureAtmosphere.cs): flowing crest light (same box and image placement as DesertBackdrop, follows its
+      opacity: dark .88, light .10) and the wind-driven sand/dust over the whole window, beneath the UI; never hit-tested. -->
+ <local:DuneFlowLayer x:Name="DuneFlow" Grid.RowSpan="2" Margin="-4" Opacity="{Binding Opacity, ElementName=DesertBackdrop}" IsHitTestVisible="False" Visibility="Collapsed"/>
+ <local:SandDriftLayer x:Name="SandDrift" Grid.RowSpan="2" Margin="-4" IsHitTestVisible="False" Visibility="Collapsed"/>
+ <!-- 0.6.0: the active mode's scene (Pink, Emo, Cinematic D light; ModeView.cs) behind every page, the scrim that keeps Library
+      and Settings readable over it, and the sidebar tint (transparent in Original GUI). -->
+ <Grid x:Name="SceneHost" Grid.RowSpan="2"/>
+ <Border x:Name="SceneScrim" Grid.RowSpan="2" Background="{DynamicResource PageScrim}" Opacity="0" IsHitTestVisible="False"/>
+ <Border x:Name="Sidebar" Grid.RowSpan="2" Width="190" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+  <Border x:Name="TitleBarSurface" Background="{DynamicResource Raised}" UseLayoutRounding="True" SnapsToDevicePixels="True"><Grid>
+   <StackPanel Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center"><TextBlock FontSize="10"><Run Text="FRAME" FontWeight="SemiBold" Foreground="{DynamicResource Text}"/><Run x:Name="ModeNameRun" Text="" Foreground="{DynamicResource Muted}"/></TextBlock></StackPanel>
+   <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" WindowChrome.IsHitTestVisibleInChrome="True">
+    <!-- 0.6.1: the five visual modes as text links, all visible at once (ModeView.BuildModeLinks); the active one is brighter. -->
+    <StackPanel x:Name="ModeLinks" Orientation="Horizontal" Margin="0,0,10,0" AutomationProperties.Name="Visual mode"/>
+    <Button Style="{StaticResource CaptionButton}" Click="MinimizeClick" ToolTip="Hide FRAME in the system tray" AutomationProperties.Name="Minimize"><Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1" RenderOptions.EdgeMode="Aliased" Data="M 0,0 L 10,0"/></Button>
+    <Button Style="{StaticResource CaptionButton}" Click="MaximizeClick" ToolTip="Expand or restore the window" AutomationProperties.Name="Maximize or restore"><Path x:Name="MaximizeIcon" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1" RenderOptions.EdgeMode="Aliased" Data="M 0,0 L 10,0 10,10 0,10 Z"/></Button>
+    <Button Style="{StaticResource CloseCaptionButton}" Click="CloseClick" ToolTip="Close FRAME (stops recording and exits; Minimize keeps it in the tray)" AutomationProperties.Name="Close FRAME"><Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2" Data="M 0,0 L 10,10 M 10,0 L 0,10"/></Button>
+   </StackPanel>
+   <Rectangle x:Name="TitleBarEdge" Height="1" VerticalAlignment="Bottom" IsHitTestVisible="False"/>
+   <Rectangle Fill="{DynamicResource Accent}" Width="56" Height="2" Margin="16,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Opacity=".25" IsHitTestVisible="False"/>
+  </Grid></Border>
+ <Grid Grid.Row="1"><Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition/></Grid.ColumnDefinitions>
+  <!-- Sidebar: Capture and Library at the top; Settings docked to the bottom (stays visible at any window height).
+       Settings is declared last so the Tab order is Capture, Library, Settings. -->
+  <DockPanel x:Name="SidebarPanel" Margin="22,40,12,0" LastChildFill="False">
+   <StackPanel DockPanel.Dock="Top">
+   <StackPanel Orientation="Horizontal" Margin="8,0,0,66"><Viewbox Width="29" Height="29" Margin="0,0,18,0"><Canvas Width="32" Height="32"><Path Stroke="{DynamicResource NavFrame}" StrokeThickness="2" Data="M 2,12 L 2,2 12,2 M 20,2 L 30,2 30,12 M 30,20 L 30,30 20,30 M 12,30 L 2,30 2,20"/></Canvas></Viewbox><TextBlock Text="F R A M E" FontSize="24" FontWeight="Light" VerticalAlignment="Center"/></StackPanel>
+   <Button ToolTip="Manage shadow and manual recording" x:Name="CaptureNav" Content="◉   Capture" Click="HomeClick" Style="{StaticResource NavigationButton}" Tag="Selected"/>
+   <Button ToolTip="Browse and open saved captures" x:Name="LibraryNav" Content="▧   Library" Click="LibraryClick" Style="{StaticResource NavigationButton}"/>
+   </StackPanel>
+   <Button ToolTip="Adjust capture preferences and hotkeys" x:Name="SettingsNav" Content="⚙   Settings" Click="SettingsClick" Style="{StaticResource NavigationButton}" DockPanel.Dock="Bottom" Margin="0,12,0,26"/>
+  </DockPanel>
+  <!-- Capture layout of the active mode (every mode except Original GUI, whose Capture page is HomePage below). -->
+  <Grid x:Name="CaptureHost" Grid.Column="1" Visibility="Collapsed"/>
+  <Grid Grid.Column="1" Margin="84,42,64,26"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+   <StackPanel x:Name="PageHeading" Visibility="Collapsed" Margin="0,0,0,24"><TextBlock x:Name="PageKicker" Style="{StaticResource Eyebrow}"/><Grid Margin="0,8,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock x:Name="PageTitle" FontSize="26" FontWeight="Light" VerticalAlignment="Center"/>
+    <!-- Settings › Apply: right column of the fixed heading row (outside PageScroll), so it never scrolls. Shown only while
+         Smart Apply has pending changes (UpdateApplyState). Its right edge is the page content's right edge (same column), which
+         sits ~15 DIP before the Settings scrollbar (measured by the UI test, 12–20 required) at any window size or DPI.
+         The negative vertical margin keeps the heading height unchanged. -->
+    <Button x:Name="ApplySettingsButton" Grid.Column="1" Content="Apply settings" Click="ApplySettingsClick" Margin="16,-4,0,-4" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed" ToolTip="Apply the changed settings" AutomationProperties.Name="Apply settings"/></Grid></StackPanel>
+   <ScrollViewer x:Name="PageScroll" Grid.Row="1" Padding="0" Margin="-32" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <Grid x:Name="PageContent" Margin="32">
+     <StackPanel x:Name="HomePage" Margin="0,104,0,0">
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,20"><Ellipse x:Name="ShadowStatusDot" Width="14" Height="14" Fill="{DynamicResource Muted}" Opacity=".55" Margin="0,0,18,0"/><TextBlock Text="S H A D O W   R E C O R D I N G" FontSize="12"/></StackPanel>
+      <Grid x:Name="ShadowRow"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/></Grid.ColumnDefinitions>
+       <!-- Shadow group: stone + label (button). The folder buttons span the whole row (never clipped); PlaceShadowGroup() puts
+            them at the label's left edge, below the tallest label state, so label changes never move them. -->
+       <Grid x:Name="ShadowGroup" Grid.Column="1" Margin="0,6,0,0" VerticalAlignment="Top">
+        <Button x:Name="ShadowButton" Click="ShadowClick" Height="148" Padding="0,0,0,40" Style="{StaticResource ObsidianAction}" HorizontalAlignment="Stretch" AutomationProperties.Name="Start or stop shadow recording"><StackPanel><TextBlock x:Name="ShadowTitle" Text="Start shadow recording" Foreground="{DynamicResource HeroText}" FontFamily="Segoe UI" FontSize="25" FontWeight="Light" TextAlignment="Left" TextWrapping="Wrap"/><TextBlock x:Name="ShadowLoadingText" Text="Loading capture engine…" FontSize="11" Foreground="{DynamicResource HeroText}" TextAlignment="Left" Margin="0,8,0,0" Visibility="Collapsed" AutomationProperties.LiveSetting="Polite"/></StackPanel></Button>
+       </Grid>
+       <StackPanel x:Name="FolderButtons" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+         <Button x:Name="CaptureFolderButton" Content="Choose capture folder" Click="CaptureFolderClick" Style="{StaticResource QuietButton}" ToolTipService.ShowOnDisabled="True"/>
+         <Button x:Name="ViewCaptureFolderButton" Content="View capture folder" Click="ViewCaptureFolderClick" Style="{StaticResource QuietButton}" Margin="12,0,0,0" ToolTip="Open the capture folder in File Explorer (works while recording)"/>
+       </StackPanel>
+       <local:HistorySliderControl x:Name="HistorySlider" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="112" Height="88" Margin="0,0,8,0" ToolTip="Drag the shard up for more history. Mouse wheel or arrow keys adjust; Home/End reach the limits." ToolTipService.ShowOnDisabled="True"/>
+      </Grid>
+      <!-- Recording controls (compact): manual recording and "Save last …" (click to save now) sized to their text. Below them the
+           two global shortcuts as equal rows: label · current key · Change hotkey (opens Settings › Hotkeys and starts editing
+           that field, the same setting). The save label follows the replay length (UpdateState). -->
+      <!-- Pause and the manual timer sit at the end of this row (0.5.5; before, they appeared as a new row and moved the page). -->
+      <Grid Margin="0,16,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <Button x:Name="RecordButton" Click="RecordClick" Style="{StaticResource RecordingAction}" Height="42" MinWidth="168" Margin="0,0,14,0" Padding="18,4" VerticalAlignment="Top"><TextBlock x:Name="RecordTitle" Text="Start manual recording" FontFamily="Segoe UI" FontWeight="Light" FontSize="14" Foreground="{DynamicResource Subtle}" TextAlignment="Center" TextWrapping="NoWrap"/></Button>
+       <Button x:Name="ReplaySaveButton" Grid.Column="1" Click="ReplaySaveClick" Style="{StaticResource Secondary}" Height="Auto" MinHeight="42" MaxWidth="340" Padding="14,6" HorizontalAlignment="Left" VerticalAlignment="Top"><TextBlock x:Name="ReplaySaveTitle" Text="Save last 5 minutes" FontSize="13" TextWrapping="Wrap" TextAlignment="Center"/></Button>
+       <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"><Button x:Name="PauseButton" Content="Pause" Click="PauseClick" Visibility="Collapsed" Margin="14,0,12,0"/><TextBlock x:Name="RecordTimer" FontFamily="Consolas" FontSize="13" VerticalAlignment="Center"/></StackPanel>
+      </Grid>
+      <Grid x:Name="ShortcutRows" Margin="0,12,0,0" HorizontalAlignment="Left"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto" MinWidth="86"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+       <TextBlock Text="Hotkey for activating or deactivating shadow recording" Foreground="{DynamicResource Subtle}" FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0"/>
+       <TextBlock x:Name="ShadowHotkeyText" Grid.Column="1" Text="Not set" FontFamily="Segoe UI Semibold" FontSize="12" Foreground="{DynamicResource Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+       <Button x:Name="ChangeShadowHotkeyButton" Grid.Column="2" Content="Change hotkey" Click="ChangeShadowHotkeyClick" Style="{StaticResource QuietButton}" ToolTip="Change the shortcut that starts or stops Shadow Recording" AutomationProperties.Name="Change the shadow recording on/off hotkey"/>
+       <TextBlock x:Name="SaveHotkeyLabel" Grid.Row="1" Text="Hotkey for saving the 5 minutes" Foreground="{DynamicResource Subtle}" FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0"/>
+       <TextBlock x:Name="SaveHotkeyText" Grid.Row="1" Grid.Column="1" Text="Alt+Z" FontFamily="Segoe UI Semibold" FontSize="12" Foreground="{DynamicResource Text}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+       <Button ToolTip="Change the save clip shortcut" x:Name="ChangeHotkeyButton" Grid.Row="1" Grid.Column="2" Content="Change hotkey" Click="ChangeHotkeyClick" Style="{StaticResource QuietButton}" AutomationProperties.Name="Change the save shadow recording hotkey"/>
+      </Grid>
+      <Border x:Name="FailurePanel" Visibility="Collapsed" Margin="0,14,0,0" CornerRadius="4" Padding="16,12" BorderThickness="1" Background="{DynamicResource Surface}"/>
+      <!-- FFmpeg missing/unsuitable (SupportView.ShowEngineProblem) and the note after an unexpected exit (ShowUnexpectedExitNote). -->
+      <Border x:Name="EnginePanel" Visibility="Collapsed" Margin="0,14,0,0" CornerRadius="4" Padding="16,12" BorderThickness="1" Background="{DynamicResource Surface}"/>
+      <Border x:Name="UnexpectedExitNote" Visibility="Collapsed" Margin="0,14,0,0" CornerRadius="4" Padding="14,10" BorderThickness="1" BorderBrush="{DynamicResource Line}" Background="{DynamicResource Surface}"/>
+      <!-- Fixed two-line slot: notes appear and disappear inside it (Hidden when empty), so the page never moves. -->
+      <TextBlock x:Name="ReplayInfo" Text="" Visibility="Hidden" Foreground="{DynamicResource Muted}" FontSize="11" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Height="30" Margin="0,8,0,0"/>
+      <Border Height="1" Background="{DynamicResource Muted}" Opacity=".6" Margin="0,12,0,18"/>
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="36"/><ColumnDefinition/></Grid.ColumnDefinitions>
+       <StackPanel><Expander x:Name="SourceExpander" Header="Capture source" Foreground="{DynamicResource Text}" FontSize="14" Style="{StaticResource QuietExpander}" Tag="Display settings"><StackPanel Margin="0,12,0,0">
+        <!-- Displays only (0.5.5): the window/game and region capture modes were removed; diagnostics harnesses still capture
+             their own synthetic test window through MainWindow.testSource (never reachable from the UI). -->
+        <Canvas x:Name="MonitorCanvas" Height="88" SizeChanged="MonitorSizeChanged" AutomationProperties.Name="Displays"/>
+       </StackPanel></Expander><TextBlock x:Name="SourceLabel" Foreground="{DynamicResource Subtle}" FontSize="11" TextWrapping="Wrap" Margin="36,6,0,0"/></StackPanel>
+       <Border Grid.Column="1" Width="1" Background="{DynamicResource Muted}" Opacity=".5" Margin="0,0,0,4"/>
+       <StackPanel Grid.Column="2"><ComboBox ToolTip="Choose resolution and recording frame rate" ToolTipService.ShowOnDisabled="True" x:Name="PresetCombo" SelectionChanged="PresetChanged" AutomationProperties.Name="Video quality"><ComboBoxItem Content="Balanced · 1080p / 60 FPS"/><ComboBoxItem Content="Original · Native / 60 FPS"/><ComboBoxItem Content="Lightweight · 720p / 30 FPS"/><ComboBoxItem Content="Custom · see Settings" IsEnabled="False"/></ComboBox><WrapPanel Margin="0,5,0,0"><CheckBox ToolTip="Include sound from your playback device" x:Name="DesktopCheck" Content="Desktop audio" Click="AudioChanged" FontSize="11" Margin="0,4,15,4"/><CheckBox ToolTip="Include sound from your microphone" x:Name="MicCheck" Content="Microphone" Click="AudioChanged" FontSize="11"/></WrapPanel></StackPanel>
+      </Grid>
+      <StackPanel x:Name="RecentList" Visibility="Collapsed"/>
+     </StackPanel>
+     <StackPanel x:Name="LibraryPage" Visibility="Collapsed"><DockPanel Margin="0,0,0,18"><Button ToolTip="View captures in Windows Explorer" Content="Open folder" Click="FolderClick" DockPanel.Dock="Right" Margin="12,0,0,0"/><ComboBox ToolTip="Order the list" x:Name="LibrarySort" DockPanel.Dock="Right" SelectionChanged="LibraryChanged" SelectedIndex="0" Width="130" Margin="12,0,0,0" AutomationProperties.Name="Sort captures"><ComboBoxItem Content="Newest first"/><ComboBoxItem Content="Oldest first"/><ComboBoxItem Content="Name"/><ComboBoxItem Content="Longest first"/><ComboBoxItem Content="Largest first"/></ComboBox><ComboBox ToolTip="Filter captures by media type" x:Name="LibraryFilter" DockPanel.Dock="Right" SelectionChanged="LibraryChanged" SelectedIndex="0" Width="140" Margin="12,0,0,0"><ComboBoxItem Content="All captures"/><ComboBoxItem Content="Videos"/><ComboBoxItem Content="Images"/></ComboBox><TextBox x:Name="SearchBox" TextChanged="SearchChanged" ToolTip="Find captures by file name" AutomationProperties.Name="Search captures"/></DockPanel><StackPanel x:Name="LibraryList"/><Button ToolTip="Show the next 50 captures" x:Name="MoreButton" Content="Load 50 more" Click="MoreClick" Margin="0,16,0,0"/></StackPanel>
+     <StackPanel x:Name="SettingsPage" Visibility="Collapsed"/>
+    </Grid>
+   </ScrollViewer>
+   <Grid Grid.Row="2" Margin="0,18,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock x:Name="Message" Text="" Foreground="{DynamicResource Subtle}" TextWrapping="Wrap" FontSize="11" Margin="0,0,16,0"/><StackPanel Grid.Column="1"><TextBlock x:Name="StatusBadge" Foreground="{DynamicResource Subtle}" FontSize="11" HorizontalAlignment="Right"/><TextBlock x:Name="Diagnostics" Visibility="Collapsed"/></StackPanel></Grid>
+  </Grid>
+  <!-- Mode tools (Pink: background picker and effect icons; Emo: its curated choices) under the title-bar mode buttons. -->
+  <ContentControl x:Name="ModeToolsHost" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,14,0" Focusable="False"/>
+ </Grid>
+ <Border x:Name="WindowOutline" Grid.RowSpan="2" BorderThickness="1" BorderBrush="{DynamicResource Line}" IsHitTestVisible="False"/>
+ </Grid>
+</Window>

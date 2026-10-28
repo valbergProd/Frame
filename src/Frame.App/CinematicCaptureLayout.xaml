@@ -1,0 +1,133 @@
+<UserControl x:Class="Frame.App.CinematicCaptureLayout" x:ClassModifier="internal" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Frame.App" Focusable="False" IsTabStop="False" FontFamily="Segoe UI">
+ <!-- Cinematic D Capture layout (0.6.0). Positions and sizes are set by Relayout() from the window size only (never from
+      text), so recording-state changes cannot move anything. Quiet controls: text and line icons, no faces or edges. -->
+ <UserControl.Resources>
+  <!-- Text control: no face or edge; hover brightens the text and its icon; keyboard focus = QuietFocus underline. -->
+  <Style x:Key="CinQuiet" TargetType="Button">
+   <Setter Property="Foreground" Value="{DynamicResource Subtle}"/><Setter Property="Background" Value="Transparent"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Padding" Value="0"/><Setter Property="MinHeight" Value="0"/><Setter Property="FontSize" Value="14"/>
+   <Setter Property="HorizontalAlignment" Value="Left"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="FocusVisualStyle" Value="{StaticResource QuietFocus}"/><Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="Transparent" Padding="{TemplateBinding Padding}"><ContentPresenter VerticalAlignment="Center"/></Border><ControlTemplate.Triggers>
+    <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource Text}"/></Trigger>
+    <Trigger Property="IsPressed" Value="True"><Setter Property="Opacity" Value=".72"/></Trigger>
+    <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".42"/></Trigger>
+   </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style x:Key="CinLink" TargetType="Button" BasedOn="{StaticResource CinQuiet}"><Setter Property="Foreground" Value="{DynamicResource Muted}"/><Setter Property="FontSize" Value="12.5"/><Setter Property="Padding" Value="6,4"/></Style>
+  <Style x:Key="CinIcon" TargetType="Path"><Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}"/><Setter Property="StrokeThickness" Value="1.35"/><Setter Property="StrokeStartLineCap" Value="Round"/><Setter Property="StrokeEndLineCap" Value="Round"/><Setter Property="StrokeLineJoin" Value="Round"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="SnapsToDevicePixels" Value="False"/></Style>
+  <!-- Key chip: the current shortcut in a thin rounded box ("Not set" dims it). -->
+  <Style x:Key="CinChip" TargetType="Border"><Setter Property="CornerRadius" Value="4"/><Setter Property="BorderThickness" Value="1"/><Setter Property="BorderBrush" Value="#8A6E5B4B"/><Setter Property="Background" Value="#38000000"/><Setter Property="Padding" Value="11,4,11,5"/><Setter Property="MinWidth" Value="62"/><Setter Property="HorizontalAlignment" Value="Left"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+  <!-- Amber check box: filled when on, a quiet outline when off. -->
+  <Style x:Key="CinCheck" TargetType="CheckBox">
+   <Setter Property="Foreground" Value="{DynamicResource Subtle}"/><Setter Property="FontSize" Value="13"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Margin" Value="0"/><Setter Property="VerticalAlignment" Value="Center"/><Setter Property="FocusVisualStyle" Value="{StaticResource QuietFocus}"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="CheckBox"><StackPanel Orientation="Horizontal" Background="Transparent">
+    <Grid Width="17" Height="17" VerticalAlignment="Center">
+     <Border x:Name="Box" CornerRadius="3" BorderThickness="1.2" BorderBrush="#A08C7B6C" Background="#30000000"/>
+     <Path x:Name="Mark" Data="M 4.2,8.8 L 7.3,11.8 L 12.9,5.4" Stroke="#24170D" StrokeThickness="1.9" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Visibility="Collapsed"/>
+    </Grid>
+    <ContentPresenter Margin="9,0,0,1" VerticalAlignment="Center"/>
+   </StackPanel><ControlTemplate.Triggers>
+    <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource Text}"/><Setter TargetName="Box" Property="BorderBrush" Value="#D8C2AE"/></Trigger>
+    <Trigger Property="IsChecked" Value="True"><Setter TargetName="Box" Property="Background" Value="#EFA04E"/><Setter TargetName="Box" Property="BorderBrush" Value="#F7B868"/><Setter TargetName="Mark" Property="Visibility" Value="Visible"/></Trigger>
+    <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value=".45"/></Trigger>
+   </ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+  </Style>
+ </UserControl.Resources>
+ <Grid x:Name="Surface">
+  <!-- The stone (CinematicStone) is placed here; its light overflows the canvas without clipping. -->
+  <Canvas x:Name="Stage"/>
+  <ScrollViewer x:Name="ColumnScroll" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False" Padding="0">
+   <Grid x:Name="Column" HorizontalAlignment="Left">
+    <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <TextBlock x:Name="TitleText" Grid.Row="0" Text="Start shadow recording" FontWeight="Light" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Hand" Margin="-2,0,0,0"/>
+    <TextBlock x:Name="Subtitle" Grid.Row="1" Text="Automatically capture your gameplay in the background" TextTrimming="CharacterEllipsis" VerticalAlignment="Top"/>
+    <TextBlock x:Name="LoadingText" Grid.Row="2" FontSize="11.5" Foreground="{DynamicResource Muted}" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" AutomationProperties.LiveSetting="Polite"/>
+    <StackPanel Grid.Row="4" Orientation="Horizontal" VerticalAlignment="Center">
+     <TextBlock x:Name="Eyebrow" Text="R E P L A Y    L E N G T H" FontSize="11.5" Foreground="#C2B2A3" VerticalAlignment="Center"/>
+     <TextBlock x:Name="LengthValue" FontSize="12.5" Foreground="{DynamicResource Text}" Margin="16,0,0,0" VerticalAlignment="Center" Opacity=".9"/>
+    </StackPanel>
+    <local:CinematicReplaySlider x:Name="Length" Grid.Row="6" VerticalAlignment="Stretch" Margin="-12,0,-12,0"/>
+    <!-- Manual recording (understated: icon and text) | Save last … ; the manual column has a fixed width (the longest label). -->
+    <Grid x:Name="Actions" Grid.Row="8" VerticalAlignment="Center"><Grid.ColumnDefinitions><ColumnDefinition x:Name="ManualColumn"/><ColumnDefinition Width="Auto"/><ColumnDefinition/></Grid.ColumnDefinitions>
+     <Button x:Name="ManualButton" Style="{StaticResource CinQuiet}" AutomationProperties.Name="Start or stop manual recording">
+      <StackPanel Orientation="Horizontal">
+       <Grid Width="24" VerticalAlignment="Center">
+        <Path x:Name="ManualPlay" Style="{StaticResource CinIcon}" Data="M 1.4,1 L 11,7 L 1.4,13 Z" HorizontalAlignment="Left"/>
+        <Rectangle x:Name="ManualStop" Width="11" Height="11" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource Recording}" HorizontalAlignment="Left" Visibility="Collapsed"/>
+       </Grid>
+       <TextBlock x:Name="ManualTitle" Text="Start manual recording" VerticalAlignment="Center"/>
+      </StackPanel>
+     </Button>
+     <Rectangle x:Name="ActionDivider" Grid.Column="1" Width="1" Height="30" Fill="#5C4C40" Opacity=".75" VerticalAlignment="Center"/>
+     <Button x:Name="SaveButton" Grid.Column="2" Style="{StaticResource CinQuiet}" Margin="30,0,0,0">
+      <StackPanel Orientation="Horizontal">
+       <Path Style="{StaticResource CinIcon}" Data="M 3.2,6.83 A 7.5,7.5 0 1 1 2.95,12.57 M 0.9,4.5 L 3.2,6.83 L 6,5.7 M 10,5.6 V 10 L 13,11.9" Width="20" Height="20"/>
+       <TextBlock x:Name="SaveTitle" Text="Save last 5 minutes" Margin="12,0,0,0" VerticalAlignment="Center"/>
+      </StackPanel>
+     </Button>
+    </Grid>
+    <!-- Reserved line under the manual control: elapsed time and Pause/Resume while a manual recording runs (Hidden otherwise). -->
+    <StackPanel x:Name="ManualDetail" Grid.Row="9" Orientation="Horizontal" VerticalAlignment="Top" Margin="24,0,0,0" Visibility="Hidden">
+     <Ellipse x:Name="ManualDot" Width="6" Height="6" Fill="{DynamicResource Recording}" VerticalAlignment="Center" Margin="0,1,8,0"/>
+     <TextBlock x:Name="ManualTimer" FontFamily="Consolas" FontSize="12.5" Foreground="{DynamicResource Subtle}" VerticalAlignment="Center" MinWidth="64"/>
+     <Button x:Name="PauseButton" Style="{StaticResource CinLink}" Content="Pause" Padding="6,0" Margin="8,0,0,0" AutomationProperties.Name="Pause or resume manual recording"/>
+    </StackPanel>
+    <Grid x:Name="Hotkeys" Grid.Row="11"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto" MinWidth="88"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+     <TextBlock x:Name="ShadowKeyLabel" Text="Hotkey for activating or deactivating shadow recording" Foreground="#E2D6CA" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,18,0"/>
+     <Border x:Name="ShadowChip" Grid.Column="1" Style="{StaticResource CinChip}"><TextBlock x:Name="ShadowKey" Text="Not set" FontSize="12.5" FontWeight="SemiBold" HorizontalAlignment="Center"/></Border>
+     <Button x:Name="ChangeShadowKey" Grid.Column="2" Style="{StaticResource CinLink}" Content="Change hotkey" Margin="18,0,0,0" ToolTip="Change the shortcut that starts or stops Shadow Recording" AutomationProperties.Name="Change the shadow recording on/off hotkey"/>
+     <TextBlock x:Name="SaveKeyLabel" Grid.Row="1" Text="Hotkey for saving the 5 minutes" Foreground="#E2D6CA" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,18,0"/>
+     <Border x:Name="SaveChip" Grid.Row="1" Grid.Column="1" Style="{StaticResource CinChip}"><TextBlock x:Name="SaveKey" Text="Not set" FontSize="12.5" FontWeight="SemiBold" HorizontalAlignment="Center"/></Border>
+     <Button x:Name="ChangeSaveKey" Grid.Row="1" Grid.Column="2" Style="{StaticResource CinLink}" Content="Change hotkey" Margin="18,0,0,0" ToolTip="Change the save clip shortcut" AutomationProperties.Name="Change the save shadow recording hotkey"/>
+    </Grid>
+    <!-- Shared notes (FailurePanel, EnginePanel, UnexpectedExitNote, the two-line ReplayInfo slot): last row, so a panel that
+         appears only extends the column downward (it scrolls if needed); nothing above it moves. -->
+    <StackPanel x:Name="Notes" Grid.Row="13" MinHeight="38"/>
+   </Grid>
+  </ScrollViewer>
+  <!-- Bottom panel: display (cards in a popup), quality (menu), audio. -->
+  <Border x:Name="BottomPanel" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="10" BorderThickness="1" BorderBrush="#7A5A4A3D" Background="#DC110D0A">
+   <Grid x:Name="PanelGrid"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto" MinWidth="250"/></Grid.ColumnDefinitions>
+    <Grid x:Name="SourceSection" VerticalAlignment="Center">
+     <Button x:Name="SourceButton" Style="{StaticResource CinQuiet}" AutomationProperties.Name="Choose displays">
+      <StackPanel Orientation="Horizontal">
+       <Path x:Name="SourceIcon" Style="{StaticResource CinIcon}" Data="M 1.5,1.5 H 22.5 V 15.5 H 1.5 Z M 8,20 H 16 M 12,15.5 V 20" Width="24" Height="21" Margin="0,0,16,0"/>
+       <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"><TextBlock x:Name="SourceTitle" Text="Display" Foreground="{DynamicResource Text}" TextTrimming="CharacterEllipsis"/><Path Style="{StaticResource CinIcon}" Data="M 0.7,0.7 L 4.5,4.3 L 8.3,0.7" Width="9" Height="5" Margin="9,2,0,0"/></StackPanel>
+        <TextBlock x:Name="SourceDetail" FontSize="12" Foreground="{DynamicResource Muted}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+       </StackPanel>
+      </StackPanel>
+     </Button>
+     <Popup x:Name="SourcePopup" StaysOpen="False" AllowsTransparency="True" Placement="Top" VerticalOffset="-14" PlacementTarget="{Binding ElementName=SourceButton}">
+      <Border Background="#F2191411" BorderBrush="#8A5A4A3D" BorderThickness="1" CornerRadius="8" Padding="18,14,18,16" Width="420">
+       <StackPanel>
+        <TextBlock Text="D I S P L A Y S" FontSize="10.5" Foreground="{DynamicResource Muted}" Margin="0,0,0,12"/>
+        <Decorator x:Name="DisplaysHost"/>
+       </StackPanel>
+      </Border>
+     </Popup>
+    </Grid>
+    <Rectangle x:Name="PanelDivider1" Grid.Column="1" Width="1" Height="44" Fill="#5C4C40" Opacity=".7" VerticalAlignment="Center"/>
+    <Button x:Name="QualityButton" Grid.Column="2" Style="{StaticResource CinQuiet}" AutomationProperties.Name="Video quality">
+     <StackPanel Orientation="Horizontal">
+      <Canvas x:Name="QualityIcon" Width="22" Height="18" Margin="0,0,16,0" VerticalAlignment="Center">
+       <Path Style="{StaticResource CinIcon}" Data="M 1,3 H 21 M 1,9 H 21 M 1,15 H 21"/>
+       <Ellipse Canvas.Left="11.6" Canvas.Top="0.6" Width="4.8" Height="4.8" Fill="#1A1410" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" StrokeThickness="1.35"/>
+       <Ellipse Canvas.Left="3.6" Canvas.Top="6.6" Width="4.8" Height="4.8" Fill="#1A1410" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" StrokeThickness="1.35"/>
+       <Ellipse Canvas.Left="9.6" Canvas.Top="12.6" Width="4.8" Height="4.8" Fill="#1A1410" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" StrokeThickness="1.35"/>
+      </Canvas>
+      <StackPanel VerticalAlignment="Center">
+       <StackPanel Orientation="Horizontal"><TextBlock x:Name="QualityLabel" Text="Quality" Foreground="{DynamicResource Text}"/><Path Style="{StaticResource CinIcon}" Data="M 0.7,0.7 L 4.5,4.3 L 8.3,0.7" Width="9" Height="5" Margin="9,2,0,0"/></StackPanel>
+       <TextBlock x:Name="QualityDetail" FontSize="12" Foreground="{DynamicResource Muted}" Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
+      </StackPanel>
+     </StackPanel>
+    </Button>
+    <Rectangle x:Name="PanelDivider2" Grid.Column="3" Width="1" Height="44" Fill="#5C4C40" Opacity=".7" VerticalAlignment="Center"/>
+    <StackPanel x:Name="AudioSection" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+     <Path x:Name="MicIcon" Stroke="{DynamicResource Subtle}" StrokeThickness="1.35" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" VerticalAlignment="Center" Width="16" Height="21" Margin="0,0,18,0" Data="M 8,1.5 C 9.9,1.5 11,2.8 11,4.6 V 9.4 C 11,11.2 9.9,12.5 8,12.5 C 6.1,12.5 5,11.2 5,9.4 V 4.6 C 5,2.8 6.1,1.5 8,1.5 Z M 2,9 C 2,12.6 4.7,15.4 8,15.4 C 11.3,15.4 14,12.6 14,9 M 8,15.4 V 19.5 M 4.8,19.5 H 11.2"/>
+     <CheckBox x:Name="DesktopCheck" Style="{StaticResource CinCheck}" Content="Desktop audio" ToolTip="Include sound from your playback device" ToolTipService.ShowOnDisabled="True"/>
+     <CheckBox x:Name="MicCheck" Style="{StaticResource CinCheck}" Content="Microphone" Margin="22,0,0,0" ToolTip="Include sound from your microphone" ToolTipService.ShowOnDisabled="True"/>
+    </StackPanel>
+   </Grid>
+  </Border>
+ </Grid>
+</UserControl>

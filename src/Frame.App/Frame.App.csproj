@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net8.0-windows</TargetFramework><UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms><ApplicationManifest>app.manifest</ApplicationManifest><AssemblyName>FRAME</AssemblyName><Version>0.6.6</Version><InformationalVersion>0.6.6-beta</InformationalVersion><Product>FRAME</Product><AssemblyTitle>FRAME</AssemblyTitle><Description>FRAME · shadow recording for Windows</Description><Copyright>Copyright (c) 2026 the FRAME developer</Copyright><NoWarn>$(NoWarn);WFAC010</NoWarn></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Frame.Core/Frame.Core.csproj"/></ItemGroup>
+  <ItemGroup><Resource Include="../../assets/desert-drift.png" Link="Assets/desert-drift.png"/><Resource Include="../../assets/Frame.ico" Link="Assets/Frame.ico"/><Resource Include="../../assets/2.png" Link="Assets/obsidian-off.png"/><Resource Include="../../assets/1.png" Link="Assets/obsidian-on.png"/></ItemGroup>
+  <!-- 0.6.0 Pink mode backgrounds: the user's supplied illustrations, embedded unchanged (1672x941 each). -->
+  <ItemGroup><Resource Include="../../assets/Sakura_garden.png" Link="Assets/pink/sakura-garden.png"/><Resource Include="../../assets/pink_mode(1).png" Link="Assets/pink/pink-1.png"/><Resource Include="../../assets/pink_mode(2).png" Link="Assets/pink/pink-2.png"/><Resource Include="../../assets/pink_mode(3).png" Link="Assets/pink/pink-3.png"/><Resource Include="../../assets/pink_mode(4).png" Link="Assets/pink/pink-4.png"/></ItemGroup>
+  <PropertyGroup><ApplicationIcon>../../assets/Frame.ico</ApplicationIcon></PropertyGroup>
+  <ItemGroup><Using Remove="System.Windows.Forms"/><Using Remove="System.Drawing"/></ItemGroup>
+  <!-- Self-contained releases bundle the newest .NET 8 servicing runtime (security fixes), not the SDK's built-in 8.0.8:
+       runtime packs Microsoft.NETCore.App / Microsoft.WindowsDesktop.App 8.0.32 from nuget.org (Microsoft-signed). Update
+       BundledRuntimeVersion for later servicing releases. Framework-dependent dev builds are not affected. -->
+  <PropertyGroup><BundledRuntimeVersion>8.0.32</BundledRuntimeVersion></PropertyGroup>
+  <ItemGroup Condition="'$(SelfContained)' == 'true'">
+    <KnownFrameworkReference Update="Microsoft.NETCore.App" LatestRuntimeFrameworkVersion="$(BundledRuntimeVersion)"/>
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App" LatestRuntimeFrameworkVersion="$(BundledRuntimeVersion)"/>
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App.WPF" LatestRuntimeFrameworkVersion="$(BundledRuntimeVersion)"/>
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App.WindowsForms" LatestRuntimeFrameworkVersion="$(BundledRuntimeVersion)"/>
+    <KnownAppHostPack Update="Microsoft.NETCore.App" AppHostPackVersion="$(BundledRuntimeVersion)"/>
+  </ItemGroup>
+</Project>

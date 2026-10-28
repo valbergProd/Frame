@@ -1,0 +1,30 @@
+FFmpeg is NOT included in FRAME 0.5.4 Beta.
+
+FRAME records, saves and exports video with FFmpeg (ffmpeg.exe and ffprobe.exe,
+version 8.1 or newer). FFmpeg is a separate program that you install yourself;
+FRAME starts it as a separate process and does not contain any FFmpeg code.
+
+Where FRAME looks for FFmpeg (first match wins):
+  1. the path chosen in Settings > Advanced > FFmpeg
+  2. the tools folder next to FRAME.exe (ffmpeg.exe + ffprobe.exe)
+  3. a winget installation (%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe)
+  4. the PATH environment variable
+
+If FFmpeg is missing, FRAME shows a panel on the Capture page. "Install FFmpeg
+(winget)" opens a visible command window that runs:
+  winget install --id Gyan.FFmpeg --exact --source winget
+(package "Gyan.FFmpeg" from Microsoft's winget community repository; Windows
+builds by gyan.dev, which are linked from https://ffmpeg.org/download.html).
+Nothing is installed unless you start it and confirm in that window.
+
+Licensing: FFmpeg is licensed under the LGPL 2.1 or later; builds that enable
+GPL components (including the gyan.dev "full" build installed by the command
+above) are licensed under the GPL v3. Those terms apply to the FFmpeg build you
+install, not to FRAME. Keep the license file that comes with your build.
+FFmpeg source code: https://ffmpeg.org/download.html
+FFmpeg is a trademark of Fabrice Bellard, originator of the FFmpeg project.
+
+Why FFmpeg is not bundled: the FFmpeg builds that contain every encoder FRAME
+uses (including the CPU H.264 encoder libx264) are GPL-licensed. Distributing
+them inside FRAME's installer would place GPL obligations on FRAME's own
+distribution. Installing FFmpeg separately keeps FRAME and FFmpeg independent.
