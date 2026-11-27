@@ -4,6 +4,8 @@ FRAME is a Windows screen recorder with disk-backed Shadow Recording, manual rec
 
 **Current release: 1.1.0.** Windows x64.
 
+![The FRAME window: Shadow Recording is active, the replay length slider is at 5 minutes](docs/images/frame-window.png)
+
 ## Features
 
 - Shadow replay and manual recording with pause/resume.
