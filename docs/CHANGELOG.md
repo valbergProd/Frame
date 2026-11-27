@@ -1,4 +1,4 @@
-# FRAME 1.0.0 (unreleased follow-up) · unexpected-exit popup · 27 November 2026
+# FRAME 1.1.0 · sand, in-window exit note and "What's new" in updates · 27 November 2026 (release draft)
 
 - The "FRAME closed unexpectedly" note is now a dismissible card at the top right inside the FRAME window (same style as the save notifications; it never appears outside the window) with Export diagnostics / Dismiss, instead of a box in the Capture page.
 - Fixed Capture-page text ("Change hotkey") being clipped on the right when a note made the column scroll; the scroll bar now has its own space beside the column.
@@ -12,7 +12,7 @@
 - Sand grains are fainter and take the brightness of the ground under them: nearly invisible on dark ground, faint pale sand where the stone lights the ground.
 - The update flow now shows "What's new": the release notes of the available version appear in Settings > General and in the install confirmation (see UPDATES.md). Notes for the next release are drafted in docs/release-notes/1.1.0.md.
 - The "Dark / No Bullshit" mode is now simply called "Dark".
-- Not packaged; recording, audio and FFmpeg behavior unchanged.
+- Recording, audio and FFmpeg behavior are unchanged.
 
 # FRAME 1.0.0 · first stable GitHub release · 28 October 2026
 
