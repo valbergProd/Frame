@@ -1,7 +1,9 @@
 FRAME - license and third-party notices
 
 FRAME
-  Copyright (c) 2026 the FRAME developer. All rights reserved.
+  Copyright (c) 2026 valbergProd. All rights reserved.
+  You may install and use FRAME free of charge for your own personal use; see LICENSE in the
+  source repository (https://github.com/valbergProd/Frame) for the full terms.
   Third-party components below retain their own license terms.
 
 Microsoft .NET (included)

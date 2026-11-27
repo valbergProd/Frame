@@ -43,3 +43,7 @@ Installer releases are available on the [Releases page](https://github.com/valbe
 See the [changelog](docs/CHANGELOG.md), [1.0 release validation](docs/FRAME_100_VALIDATION.md), [setup validation](docs/FRAME_068_VALIDATION.md), [updater validation](docs/FRAME_066_VALIDATION.md), [audio validation](docs/FRAME_065_VALIDATION.md) and [stop/shutdown validation](docs/FRAME_064_VALIDATION.md). Tests run in isolated folders under `work`; never use a user's settings or recordings as fixtures. Desktop capture, hardware and installer acceptance still require local Windows testing.
 
 Older documentation is retained as dated history, including the [previous README](docs/HISTORICAL_README_035.md). Local handover notes, builds, installed test copies and generated recordings are not versioned.
+
+## License
+
+Copyright (c) 2026 valbergProd. All rights reserved. The source code is published for viewing only. You're welcome to download FRAME and use it for free for your own use, but not to copy, modify or redistribute the code or the program. Third-party components keep their own licenses; see [packaging/licenses](packaging/licenses). See [LICENSE](LICENSE).
