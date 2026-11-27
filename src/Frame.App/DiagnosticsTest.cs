@@ -22,7 +22,7 @@ public partial class MainWindow
         try
         {
             bool crashedBefore = DiagnosticLog.CrashFile is { } cf && File.Exists(cf);
-            if (crashedBefore) Check("After --crash-test: the unexpected-exit note is shown and the crash was logged as Critical", UnexpectedExitNote.Visibility == Visibility.Visible && DiagnosticLog.ReadLines().Any(l => l.Contains("\"Level\":\"Critical\"") && l.Contains("Simulated fatal error")), new { note = UnexpectedExitNote.Visibility.ToString() });
+            if (crashedBefore) Check("After --crash-test: the unexpected-exit note (top-right card inside the FRAME window) is shown and the crash was logged as Critical", UnexpectedExitCard.Visibility == Visibility.Visible && DiagnosticLog.ReadLines().Any(l => l.Contains("\"Level\":\"Critical\"") && l.Contains("Simulated fatal error")), new { note = UnexpectedExitCard.Visibility.ToString() });
 
             // 1. Format: one JSON line, UTC time, level, version, component, message, exception with stack.
             try { throw new IOException("Simulated I/O failure (diagnostics test)"); } catch (IOException e) { DiagnosticLog.Error("diag-test", "Controlled error for the diagnostics test", e); }

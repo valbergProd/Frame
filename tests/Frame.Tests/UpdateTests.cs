@@ -25,6 +25,14 @@ internal static class UpdateTests
         test("Updates: skip drafts, old/current versions and releases without installers", () => assert(Select(beta, Release("v0.8.0-beta", draft: true), Release("v0.6.6-beta"), Release("v0.6.5-beta"), Release("v0.9.0-beta", installer: false)) == null));
         test("Updates: choose highest version independent of publication ordering", () => assert(Select(beta, Release("v0.7.0-beta"), Release("v0.9.0-beta"), Release("v0.8.0-beta"))!.Version.Number.Minor == 9));
         test("Updates: prerelease flag must match the tag", () => assert(Select(beta, Release("v0.7.0-beta", false), Release("v0.8.0", true)) == null));
+        test("Updates: the release notes (Markdown body) reach the update as short plain text", () =>
+        {
+            var node = System.Text.Json.Nodes.JsonNode.Parse(JsonSerializer.Serialize(Release("v0.7.0-beta")))!.AsObject();
+            node["body"] = "# FRAME 0.7.0\r\n\r\n## What's new\r\n- **Sand** under the [stone](https://example.org)\r\n* <b>Dark</b> mode\r\n\r\n\r\n\r\nFixes `x`";
+            var found = AppUpdates.Select(new System.Text.Json.Nodes.JsonArray(node).ToJsonString() is var json ? System.Text.Encoding.UTF8.GetBytes(json) : [], repo, beta)!;
+            assert(found.Changelog == "FRAME 0.7.0\n\nWhat's new\n• Sand under the stone\n• Dark mode\n\nFixes x");
+            assert(AppUpdates.CleanNotes(new string('a', 5000)).Length == 2401 && AppUpdates.CleanNotes(null) == "" && Select(beta, Release("v0.7.0-beta"))!.Changelog == "");
+        });
         test("Updates: empty release feed is valid", () => assert(Select(beta) == null));
         test("Updates: reject untrusted installer URL", () => throws(() => Select(beta, Release("v0.7.0-beta", url: "https://example.org/FRAME-Setup.exe"))));
         test("Updates: reject corrupt checksum metadata and oversized files", () => { throws(() => Select(beta, Release("v0.7.0-beta", digest: "sha256:bad"))); throws(() => Select(beta, Release("v0.7.0-beta", size: AppUpdates.MaxInstallerBytes + 1))); });

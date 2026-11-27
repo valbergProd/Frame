@@ -7,7 +7,7 @@ using System.Windows.Shapes;
 
 namespace Frame.App;
 
-// Capture layout of the plain and scene modes (0.6.0): Dark / No Bullshit, Light, Pink and Emo. Straightforward controls,
+// Capture layout of the plain and scene modes (0.6.0): Dark, Light, Pink and Emo. Straightforward controls,
 // coloured only by the mode palette (ModePalettes: theme brushes + HeadingFont); no stone, glow or animation of its own.
 // Composition follows Cinematic D in a plain form: title and main action, horizontal replay length, quiet manual recording,
 // shortcut rows, notes, and a bottom bar with display, quality and audio. Pink/Emo scenes draw behind it; Emo puts its quote

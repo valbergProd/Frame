@@ -14,7 +14,7 @@ public static class VisualModes
     public const VisualMode Default = VisualMode.Original;
     public static string Name(VisualMode mode) => mode switch
     {
-        VisualMode.Original => "Original GUI", VisualMode.Dark => "Dark / No Bullshit",
+        VisualMode.Original => "Original GUI", VisualMode.Dark => "Dark",
         VisualMode.Pink => "Pink mode", VisualMode.Light => "Light mode", _ => "Emo mode"
     };
     public static string Key(VisualMode mode) => mode switch
@@ -26,7 +26,7 @@ public static class VisualModes
     public static VisualMode Parse(string? key) => string.Equals(key?.Trim(), FormerCinematicD, StringComparison.OrdinalIgnoreCase) ? VisualMode.Original
         : All.FirstOrDefault(m => string.Equals(Key(m), key?.Trim(), StringComparison.OrdinalIgnoreCase), Default);
     public static bool IsKnown(string? key) => string.Equals(key?.Trim(), FormerCinematicD, StringComparison.OrdinalIgnoreCase) || All.Any(m => string.Equals(Key(m), key?.Trim(), StringComparison.OrdinalIgnoreCase));
-    // Decorative motion: Dark / No Bullshit and Light have none at all (no clock subscription, no scene).
+    // Decorative motion: Dark and Light have none at all (no clock subscription, no scene).
     public static bool Decorative(VisualMode mode) => mode is not (VisualMode.Dark or VisualMode.Light);
 }
 

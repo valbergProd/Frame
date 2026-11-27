@@ -16,7 +16,8 @@ public partial class MainWindow
     string updateMessage = "Updates are downloaded only when you choose.";
     bool checkingUpdate;
     CancellationTokenSource? updateDownload;
-    TextBlock? updateStatus;
+    TextBlock? updateStatus, updateNotesText, updateNotesHeading;
+    StackPanel? updateNotesPanel;
     Button? checkUpdateButton, downloadUpdateButton, installUpdateButton, cancelUpdateButton;
 
     void BuildUpdates(Panel general)
@@ -28,12 +29,19 @@ public partial class MainWindow
         cancelUpdateButton = ActionButton("Cancel download", () => updateDownload?.Cancel());
         buttons.Children.Add(checkUpdateButton); buttons.Children.Add(downloadUpdateButton); buttons.Children.Add(installUpdateButton); buttons.Children.Add(cancelUpdateButton);
         box.Children.Add(buttons); updateStatus = MutedText(updateMessage, 11, new Thickness(0, 6, 0, 0)); box.Children.Add(updateStatus);
+        // "What's new": the release notes of the available version (GitHub release body), shown as soon as an update is found.
+        updateNotesHeading = Themed(new TextBlock { FontSize = 12, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 0, 0, 4) }, TextBlock.ForegroundProperty, "Text"); updateNotesText = MutedText("", 11, new Thickness(0));
+        updateNotesPanel = new StackPanel { Margin = new Thickness(0, 12, 0, 0), Visibility = Visibility.Collapsed };
+        updateNotesPanel.Children.Add(updateNotesHeading); updateNotesPanel.Children.Add(updateNotesText);
+        var fullNotes = ActionButton("Full release notes", () => { if (availableUpdate != null) OpenLink(availableUpdate.Notes.ToString()); }); fullNotes.HorizontalAlignment = HorizontalAlignment.Left; fullNotes.Margin = new Thickness(0, 6, 0, 0);
+        updateNotesPanel.Children.Add(fullNotes); box.Children.Add(updateNotesPanel);
         Pair(general, "FRAME " + CurrentRelease, box, "Updates from the official FRAME release page"); RefreshUpdates();
     }
     void RefreshUpdates()
     {
         if (updateStatus == null) return;
         updateStatus.Text = updateMessage;
+        if (updateNotesPanel != null) { updateNotesPanel.Visibility = availableUpdate != null ? Visibility.Visible : Visibility.Collapsed; updateNotesHeading!.Text = availableUpdate == null ? "" : "What's new in FRAME " + availableUpdate.Version; updateNotesText!.Text = availableUpdate?.Changelog is { Length: > 0 } c ? c : "See the full release notes for what changed."; }
         checkUpdateButton!.IsEnabled = !checkingUpdate && updateDownload == null;
         downloadUpdateButton!.Visibility = availableUpdate != null && downloadedUpdate == null && updateDownload == null ? Visibility.Visible : Visibility.Collapsed;
         installUpdateButton!.Visibility = downloadedUpdate != null ? Visibility.Visible : Visibility.Collapsed;
@@ -81,7 +89,9 @@ public partial class MainWindow
     {
         if (downloadedUpdate == null || availableUpdate == null || quitRequested) return;
         if (UpdateInstallBusy()) { updateMessage = "Stop recording and close the trim/share editor before installing."; RefreshUpdates(); return; }
-        if (!QuietDialog.Confirm(this, "Install FRAME " + availableUpdate.Version, "FRAME will close and open the update installer. Your settings and recordings will be kept.", "Close and install")) return;
+        string notes = availableUpdate.Changelog.Length > 700 ? availableUpdate.Changelog[..700].TrimEnd() + "…" : availableUpdate.Changelog;
+        string message = "FRAME will close and open the update installer. Your settings and recordings will be kept." + (notes.Length > 0 ? "\n\nWhat's new:\n" + notes : "");
+        if (!QuietDialog.Confirm(this, "Install FRAME " + availableUpdate.Version, message, "Close and install")) return;
         try
         {
             if (UpdateInstallBusy() || quitRequested) return;

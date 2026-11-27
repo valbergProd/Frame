@@ -25,7 +25,7 @@ public sealed record ReleaseVersion(Version Number, int? Beta) : IComparable<Rel
     public override string ToString() => Number.ToString(3) + (Beta is { } b ? "-beta" + (b == 0 ? "" : "." + b) : "");
 }
 
-public sealed record AppUpdate(ReleaseVersion Version, Uri Download, Uri Notes, string FileName, long Size, string Sha256);
+public sealed record AppUpdate(ReleaseVersion Version, Uri Download, Uri Notes, string FileName, long Size, string Sha256, string Changelog = "");
 
 public sealed class AppUpdates(HttpClient client, string repository)
 {
@@ -68,10 +68,28 @@ public sealed class AppUpdates(HttpClient client, string repository)
             string expected = "https://github.com/" + repository + "/releases/download/" + Uri.EscapeDataString(tag) + "/" + file;
             if (size <= 0 || size > MaxInstallerBytes || digest == null || !Regex.IsMatch(digest, "^sha256:[a-fA-F0-9]{64}$")
                 || asset.GetProperty("browser_download_url").GetString() != expected) throw new IOException("The published update has invalid download details.");
-            var candidate = new AppUpdate(version, new Uri(expected), new Uri("https://github.com/" + repository + "/releases/tag/" + Uri.EscapeDataString(tag)), file, size, digest[7..]);
+            string body = release.TryGetProperty("body", out var notesElement) && notesElement.ValueKind == JsonValueKind.String ? notesElement.GetString() ?? "" : "";
+            var candidate = new AppUpdate(version, new Uri(expected), new Uri("https://github.com/" + repository + "/releases/tag/" + Uri.EscapeDataString(tag)), file, size, digest[7..], CleanNotes(body));
             if (best == null || candidate.Version.CompareTo(best.Version) > 0) best = candidate;
         }
         return best;
+    }
+    // The release notes (GitHub release body, Markdown) as short plain text for the "What's new" part of the update flow:
+    // headings become plain lines, "-"/"*" bullets become "•", bold/italic/code marks, links and HTML are reduced to their text,
+    // runs of blank lines collapse, and the result is capped (the full notes stay one click away on the release page).
+    public static string CleanNotes(string? markdown, int maxLength = 2400)
+    {
+        if (string.IsNullOrWhiteSpace(markdown)) return "";
+        string text = markdown.Replace("\r\n", "\n").Replace('\r', '\n');
+        text = Regex.Replace(text, @"<[^>]{0,200}>", "");                       // HTML tags
+        text = Regex.Replace(text, @"!?\[([^\]]*)\]\([^)]*\)", "$1");              // [text](url) and images
+        text = Regex.Replace(text, @"^[ \t]{0,3}#{1,6}[ \t]*", "", RegexOptions.Multiline); // heading marks
+        text = Regex.Replace(text, @"^[ \t]*[-*+][ \t]+", "• ", RegexOptions.Multiline);   // bullets
+        text = Regex.Replace(text, @"(\*\*|__|`)", "");                            // bold / code marks
+        text = Regex.Replace(text, @"[ \t]+\n", "\n");
+        text = Regex.Replace(text, @"\n{3,}", "\n\n").Trim();
+        if (text.Length > maxLength) text = text[..maxLength].TrimEnd() + "…";
+        return text;
     }
     public async Task<string> Download(AppUpdate update, string folder, IProgress<double>? progress, CancellationToken cancel)
     {

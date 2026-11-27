@@ -10,7 +10,7 @@ namespace Frame.App;
 //   - Shadow Recording keeps running while the title-bar button goes through all five modes (twice, with the title-bar links): same FFmpeg processes, buffer keeps growing, capture settings / replay length / hotkeys unchanged, and a
 //     save afterwards still holds footage from before the first switch (nothing was reset);
 //   - every layout shows the same state (CaptureSnapshot) and manual recording works from a new layout (start, stop, file);
-//   - decorative work per mode: Dark / No Bullshit and Light never run the clock; every mode stops it completely while FRAME
+//   - decorative work per mode: Dark and Light never run the clock; every mode stops it completely while FRAME
 //     is minimized to the tray and resumes without catching up.
 public partial class MainWindow
 {
@@ -75,7 +75,7 @@ public partial class MainWindow
             var made = Directory.EnumerateFiles(settings.OutputDirectory, "*.*", SearchOption.AllDirectories).Where(f => !existing.Contains(f) && f.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)).ToArray();
             double manualDuration = 0;
             if (made.Length > 0) { var m = await Backend.Run(probe, ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", made[0]], 20); double.TryParse(m.Text.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out manualDuration); }
-            Check("Manual recording from the Dark / No Bullshit layout: shown while recording, finalized into a playable file; Shadow Recording continues", manualShown && made.Length == 1 && manualDuration > 2 && engine.Replay && engine.State == RecordingState.Idle, new { made = made.Select(Path.GetFileName), manualDuration });
+            Check("Manual recording from the Dark layout: shown while recording, finalized into a playable file; Shadow Recording continues", manualShown && made.Length == 1 && manualDuration > 2 && engine.Replay && engine.State == RecordingState.Idle, new { made = made.Select(Path.GetFileName), manualDuration });
 
             // Decorative work per mode: visible, then minimized to the tray (clock must stop), then shown again (no catch-up).
             var modes = new List<object>(); bool quietPlain = true, stops = true, resumes = true;
@@ -93,7 +93,7 @@ public partial class MainWindow
                 resumes &= resumed;
                 modes.Add(new { mode = VisualModes.Name(m), visibleRunning = running, stopped, resumed, largestStep = Math.Round(atmosphere.LargestStep, 3) });
             }
-            Check("Dark / No Bullshit and Light run no decorative clock while visible", quietPlain, modes);
+            Check("Dark and Light run no decorative clock while visible", quietPlain, modes);
             Check("Every mode: minimized to the tray stops all decorative updates (clock unsubscribed, no client updates)", stops, modes);
             Check("Every mode: shown again resumes as before without catching up (largest step ≤ 0.1 s)", resumes, modes);
             Check("Shadow Recording still the same session after all mode and visibility changes", engine.Replay && engine.ProcessIds.Order().SequenceEqual(pids), new { pids = engine.ProcessIds.ToArray() });

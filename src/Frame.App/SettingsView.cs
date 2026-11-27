@@ -298,7 +298,7 @@ public partial class MainWindow
             if (!restarted && !ffmpegChanged) Notify("Settings applied.");
         });
         applyButton = ApplySettingsButton; UpdateApplyState();
-        page.Children.Add(MutedText("Hotkeys, the capture folder and game minimizing save immediately. Other changes show Apply settings next to the heading.", 11, new Thickness(0, 24, 0, 20)));
+        page.Children.Add(MutedText("Hotkeys, the capture folder and game minimizing save immediately. Other changes show Apply settings next to the heading.", 11, new Thickness(0, 48, 0, 20))); // well below the collapsed Advanced heading so it reads as a note for the whole page
     }
     // FormatHotkey (the single label entry point) is in HotkeyNames.cs: layout-aware key names (0.5.5).
     bool hotkeyCaptureActive;

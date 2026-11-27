@@ -1,3 +1,19 @@
+# FRAME 1.0.0 (unreleased follow-up) · unexpected-exit popup · 27 November 2026
+
+- The "FRAME closed unexpectedly" note is now a dismissible card at the top right inside the FRAME window (same style as the save notifications; it never appears outside the window) with Export diagnostics / Dismiss, instead of a box in the Capture page.
+- Fixed Capture-page text ("Change hotkey") being clipped on the right when a note made the column scroll; the scroll bar now has its own space beside the column.
+- The Settings footer note about what saves immediately sits further below, so it no longer looks like part of Advanced settings.
+- Cinematic D: a little more fine, fast sand blowing across the ground under the stone, moved by the same desert wind.
+- The ground sand grains are now much smaller and blow in varied gusts: mostly to the right along different paths, occasionally a quick gust to the left or a calm lull.
+- More, even smaller sand grains; when the wind drops they fall toward the ground in proportion to the lost speed, and strong gusts lift them again.
+- Sand grains no longer pile up in a line along the top of the sand area in strong gusts: each grain has its own flight altitude. Grains are small round-ish specks that are no longer stretched along the wind.
+- More realistic ground sand: many more grains on several ground levels (lower on screen = nearer = larger and faster), grains with weight that roll, get lifted and thrown by gusts and bounce when they land, in duller sand colours without a glow.
+- The ground sand now runs at about 60 updates per second (smoother, less smearing) with about 1100 grains, and its colour and shade follow the light and shadow on the ground (lit near the stone, dark toward the edges), without a glow of its own.
+- Sand grains are fainter and take the brightness of the ground under them: nearly invisible on dark ground, faint pale sand where the stone lights the ground.
+- The update flow now shows "What's new": the release notes of the available version appear in Settings > General and in the install confirmation (see UPDATES.md). Notes for the next release are drafted in docs/release-notes/1.1.0.md.
+- The "Dark / No Bullshit" mode is now simply called "Dark".
+- Not packaged; recording, audio and FFmpeg behavior unchanged.
+
 # FRAME 1.0.0 · first stable GitHub release · 28 October 2026
 
 - Repository maintenance after release: personal agent files were removed from all published branch/tag history, with local copies retained. App/release bytes are unchanged; see `HISTORY_CLEANUP.md` for verification and the GitHub cache limitation.

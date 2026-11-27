@@ -61,20 +61,28 @@ public partial class MainWindow
     }
     static void OpenLink(string url) { try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); } catch (System.ComponentModel.Win32Exception e) { DiagnosticLog.Warning("link", "Could not open " + url, e); } }
 
-    // After a session that did not end normally (DiagnosticLog.BeginSession found the marker): one discreet note on the
-    // Capture page until the user dismisses it or exports diagnostics from it. Never automatic, never a pop-up.
+    // After a session that did not end normally (DiagnosticLog.BeginSession found the marker): one discreet card locked to the
+    // top right of the FRAME window (UnexpectedExitCard; never a separate window, never elsewhere) until the user dismisses it
+    // or exports diagnostics from it. Never automatic export.
     void ShowUnexpectedExitNote()
     {
-        if (DiagnosticLog.UnexpectedExitFile is not { } file || !File.Exists(file)) { UnexpectedExitNote.Visibility = Visibility.Collapsed; return; }
+        if (DiagnosticLog.UnexpectedExitFile is not { } file || !File.Exists(file)) { UnexpectedExitCard.Visibility = Visibility.Collapsed; return; }
+        var gold = new SolidColorBrush(Color.FromRgb(229, 172, 82)); var hover = new SolidColorBrush(Color.FromRgb(247, 184, 104));
+        var template = (ControlTemplate)System.Windows.Markup.XamlReader.Parse("<ControlTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' TargetType='Button'><Border Background='Transparent' Padding='8,3'><ContentPresenter HorizontalAlignment='Center' VerticalAlignment='Center'/></Border></ControlTemplate>");
+        Button Link(string label, string tip, Action click)
+        {
+            var text = new TextBlock { Text = label, FontSize = 12, Foreground = gold }; var b = new Button { Content = text, Template = template, Cursor = System.Windows.Input.Cursors.Hand, FocusVisualStyle = (Style)FindResource("QuietFocus") }; System.Windows.Automation.AutomationProperties.SetName(b, label);
+            b.MouseEnter += (_, _) => text.Foreground = hover; b.MouseLeave += (_, _) => text.Foreground = gold; b.Click += (_, _) => click();
+            TooltipPolish.Describe(b, tip); return b;
+        }
         var body = new StackPanel();
-        body.Children.Add(new TextBlock { Text = "FRAME closed unexpectedly during the previous session. You can export diagnostic information to help investigate the issue.", FontSize = 12, TextWrapping = TextWrapping.Wrap });
-        var row = new WrapPanel { Margin = new Thickness(-8, 6, 0, 0) };
-        var export = new Button { Content = "Export diagnostics", Style = (Style)FindResource("QuietButton"), FontSize = 12 }; export.SetResourceReference(ForegroundProperty, "Text");
-        export.Click += async (_, _) => { if (await ExportDiagnosticsInteractive() != null) DismissUnexpectedExit(); };
-        var dismiss = new Button { Content = "Dismiss", Style = (Style)FindResource("QuietButton"), FontSize = 12 }; dismiss.Click += (_, _) => DismissUnexpectedExit();
-        TooltipPolish.Describe(export, "Save a ZIP with logs and system details to share with the FRAME team"); TooltipPolish.Describe(dismiss, "Hide this note; the logs are kept");
-        row.Children.Add(export); row.Children.Add(dismiss); body.Children.Add(row);
-        UnexpectedExitNote.Child = body; UnexpectedExitNote.Visibility = Visibility.Visible;
+        body.Children.Add(new TextBlock { Text = "FRAME closed unexpectedly", FontSize = 13, FontWeight = FontWeights.SemiBold, Foreground = new SolidColorBrush(Color.FromRgb(245, 238, 230)) });
+        body.Children.Add(new TextBlock { Text = "FRAME did not close normally last time. You can export diagnostic information to help investigate the issue.", FontSize = 11, TextWrapping = TextWrapping.Wrap, Foreground = new SolidColorBrush(Color.FromRgb(199, 184, 170)), Margin = new Thickness(0, 3, 0, 0) });
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(-8, 6, 0, 0) };
+        row.Children.Add(Link("Export diagnostics", "Save a ZIP with logs and system details to share with the FRAME team", async () => { if (await ExportDiagnosticsInteractive() != null) DismissUnexpectedExit(); }));
+        row.Children.Add(Link("Dismiss", "Hide this note; the logs are kept", DismissUnexpectedExit));
+        body.Children.Add(row);
+        UnexpectedExitCard.Child = body; UnexpectedExitCard.Visibility = Visibility.Visible;
     }
     void DismissUnexpectedExit()
     {
@@ -85,7 +93,7 @@ public partial class MainWindow
             if (DiagnosticLog.CrashFile is { } c && File.Exists(c)) File.Move(c, Path.Combine(Path.GetDirectoryName(c)!, $"crash-{DateTime.Now:yyyyMMdd-HHmmss}.json"), true);
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { DiagnosticLog.Warning("session", "Unexpected-exit note could not be cleared", e); }
-        UnexpectedExitNote.Visibility = Visibility.Collapsed;
+        UnexpectedExitCard.Visibility = Visibility.Collapsed;
     }
 
     void OpenLogFolder()

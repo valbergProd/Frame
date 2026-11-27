@@ -18,6 +18,7 @@ namespace Frame.App;
 // clock client: attached to CaptureAtmosphere while it is visible, detached otherwise; Present() shows the still state.
 partial class CinematicCaptureLayout : ICaptureLayout, IDecorativeClient
 {
+    const double ScrollBarReserve = 10; // App.xaml ScrollBar style is 8 DIP wide
     readonly ModeContext context;
     readonly ICaptureCommands commands;
     readonly CinematicLight light = new();
@@ -47,7 +48,7 @@ partial class CinematicCaptureLayout : ICaptureLayout, IDecorativeClient
     {
         this.context = context; commands = context.Commands;
         InitializeComponent();
-        Stage.Children.Add(stone);
+        Stage.Children.Add(stone); scene.Bind(context.Atmosphere);
         stone.Click += async (_, _) => await commands.ToggleShadow();
         // The title is part of the same action (as the 0.5.5 label): click toggles, hover lifts the stone. The stone is the
         // keyboard stop and automation element, so the title is not focusable.
@@ -138,7 +139,7 @@ partial class CinematicCaptureLayout : ICaptureLayout, IDecorativeClient
     public void Advance(double dt)
     {
         // --render-animation restarts the shared clock (Phase back to ~0): restart the light too, so clips are reproducible.
-        if (context.Atmosphere.Phase < lastPhase) light.Restart();
+        if (context.Atmosphere.Phase < lastPhase) { light.Restart(); scene.RestartDust(); }
         lastPhase = context.Atmosphere.Phase;
         clocked = true; light.Advance(dt); ApplyLight();
     }
@@ -186,8 +187,10 @@ partial class CinematicCaptureLayout : ICaptureLayout, IDecorativeClient
         double stoneX = stoneLeft + shift, columnX = stoneX + diameter + gap;
         double stoneY = columnTop + L(118, 140, s) * gapScale - diameter / 2;
         stone.SetDiameter(diameter); Canvas.SetLeft(stone, stoneX); Canvas.SetTop(stone, stoneY);
-        // The viewport extends 14 DIP left and right of the column so the slider handle and its glow are never clipped.
-        ColumnScroll.Margin = new Thickness(columnX - 14, columnTop, 0, 0); ColumnScroll.Width = columnWidth + 28; ColumnScroll.Height = Math.Max(0, panelTop - 4 - columnTop);
+        // The viewport extends 14 DIP left and right of the column so the slider handle and its glow are never clipped, plus room
+        // for the (8 DIP) vertical scroll bar: when a note makes the column taller the bar appears beside the column instead of
+        // eating into it (otherwise "Change hotkey" and the note were clipped on the right).
+        ColumnScroll.Margin = new Thickness(columnX - 14, columnTop, 0, 0); ColumnScroll.Width = columnWidth + 28 + ScrollBarReserve; ColumnScroll.Height = Math.Max(0, panelTop - 4 - columnTop);
         Column.Width = columnWidth; Column.Margin = new Thickness(14, 0, 14, 0);
         // Manual column: fixed to the longest label, so Start/Stop never moves the divider or Save.
         var measure = new FormattedText("Start manual recording", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(ManualTitle.FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal), ManualTitle.FontSize, Brushes.White, VisualTreeHelper.GetDpi(this).PixelsPerDip);

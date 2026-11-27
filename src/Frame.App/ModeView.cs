@@ -161,7 +161,7 @@ public partial class MainWindow : ICaptureCommands
 
     // Shared status elements: their 0.5.5 places in HomePage are remembered once; a layout gets them in its hosts.
     (Panel Parent, int Index)[]? homeSlots;
-    FrameworkElement[] SharedNotes => [FailurePanel, EnginePanel, UnexpectedExitNote, ReplayInfo];
+    FrameworkElement[] SharedNotes => [FailurePanel, EnginePanel, ReplayInfo];
     void MoveSharedElements(ICaptureLayout? layout)
     {
         var shared = SharedNotes.Append(MonitorCanvas).ToArray();

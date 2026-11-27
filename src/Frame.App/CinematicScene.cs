@@ -123,6 +123,7 @@ sealed class CinematicScene : IModeScene
     readonly Rectangle pool = new();
     readonly RadialGradientBrush poolBrush = new();
     readonly Canvas reflection = new();
+    readonly CinematicDust dust = new(); // sand blowing across the ground at the stone's base (0.6.9)
     readonly Image reflectOn = new() { Stretch = Stretch.Fill }, reflectOff = new() { Stretch = Stretch.Fill };
     readonly RotateTransform turnOn = new(), turnOff = new();
     readonly ScaleTransform mirrorOn = new(), mirrorOff = new();
@@ -133,8 +134,8 @@ sealed class CinematicScene : IModeScene
     public FrameworkElement Root => root;
     public FrameworkElement? Tools => null;
     public FrameworkElement? Hero => null;
-    public bool WantsFrames => false; // the layout's light client drives every layer
-    public bool FullRate => false;
+    public bool WantsFrames => placed && lights.IsVisible; // only the ground sand (CinematicDust) animates here; the layout's light client drives every other layer
+    public bool FullRate => true; // the sand runs at the display rate (~60/s): at 30/s fast tiny grains looked smeared
 
     public CinematicScene()
     {
@@ -165,12 +166,22 @@ sealed class CinematicScene : IModeScene
             var group = new TransformGroup(); group.Children.Add(turn); group.Children.Add(mirror); image.RenderTransform = group;
             reflection.Children.Add(image);
         }
-        lights.Children.Add(reflection);
+        lights.Children.Add(reflection); lights.Children.Add(dust);
         lights.Children.Add(halo);
     }
     public void Enter() { }
     public void Leave() { }
-    public void Advance(double dt) { }
+    CaptureAtmosphere? atmosphere;
+    public void Bind(CaptureAtmosphere clock) => atmosphere = clock; // the shared desert clock/wind the sand is driven by
+    double dustPending;
+    // Full-rate clients get every composition frame (the display rate: 144+ Hz on fast monitors); the sand is capped to ~60 updates/s.
+    public void Advance(double dt)
+    {
+        if (atmosphere == null || !placed || !lights.IsVisible) return;
+        dustPending += dt; if (dustPending < .013) return;
+        dust.Advance(Math.Min(dustPending, .1), atmosphere); dustPending = 0;
+    }
+    public void RestartDust() => dust.Restart();
     public void Present() { }
     public void PageChanged(bool capturePage) => lights.Visibility = capturePage ? Visibility.Visible : Visibility.Collapsed;
 
@@ -192,6 +203,7 @@ sealed class CinematicScene : IModeScene
         Put(contact, centre.X - .62 * r, contactY - .12 * r, 1.24 * r, .2 * r);
         Put(spill, centre.X - 3.3 * r, centre.Y - 3 * r, 6.6 * r, 6.3 * r);
         Put(halo, centre.X - 1.6 * r, centre.Y - 1.55 * r, 3.2 * r, 3.2 * r);
+        Put(dust, centre.X - 2.3 * r, contactY - .95 * r, 4.6 * r, 2 * r); dust.Resize(4.6 * r, 2 * r, centre.X - 2.3 * r, contactY - .95 * r, root.ActualWidth > 0 ? root.ActualWidth : 1280, root.ActualHeight > 0 ? root.ActualHeight : 800); dust.SetStone(centre.X, centre.Y, r, contactY);
         var mirrorRect = new Rect(art.X, contactY - .15 * r, art.Width, 1.05 * r);
         Put(reflection, mirrorRect.X, mirrorRect.Y, mirrorRect.Width, mirrorRect.Height); reflection.OpacityMask = Grit(mirrorRect);
         double box = art.Width, mirrorLine = contactY - art.Y;
@@ -212,6 +224,7 @@ sealed class CinematicScene : IModeScene
         if (!placed) return;
         Fade(spill, l.Halo); Fade(halo, l.Halo);
         Fade(pool, .85 * l.Pool); Fade(soft, .8 * l.Pool);
+        dust.SetLight(l.Pool, l.Halo, l.Lateral);
         var c = new Point(poolCentre.X + poolShift * l.Lateral, poolCentre.Y); poolBrush.Center = poolBrush.GradientOrigin = c;
         turnOn.Angle = turnOff.Angle = l.Angle;
         Fade(reflectOn, l.Lit * .55 * l.Pool); Fade(reflectOff, (1 - l.Lit) * .7 * l.Pool);

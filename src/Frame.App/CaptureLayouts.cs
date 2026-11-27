@@ -83,7 +83,7 @@ public interface ICaptureLayout
 {
     FrameworkElement Root { get; }        // placed in MainWindow.CaptureHost (the whole content column, right of the sidebar)
     // Shared status elements are moved (re-parented) into these hosts while the layout is shown, and back afterwards:
-    // NotesHost receives FailurePanel, EnginePanel, UnexpectedExitNote and ReplayInfo (in this order; ReplayInfo is a fixed
+    // NotesHost receives FailurePanel, EnginePanel and ReplayInfo (in this order; ReplayInfo is a fixed
     // two-line slot so notes never move the page). DisplayHost receives MonitorCanvas (the clickable display cards).
     Panel NotesHost { get; }
     Decorator DisplayHost { get; }

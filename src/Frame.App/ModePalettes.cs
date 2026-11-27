@@ -22,7 +22,7 @@ public static class ModePalettes
             // Original GUI (0.6.1; the 0.6.0 Cinematic D design): the desert palette with a slightly deeper, warmer night;
             // panels are smoked glass over the scene. (The 0.5.5 palette, DesertAppearance, is no longer a mode.)
             VisualMode.Original => ["#120E0B", "#B01A1511", "#A0262019", "#4A3B30", "#F5EEE6", "#BDAE9F", "#F28A3C", "#70492218", "#FFF4EC", "#D6C9BC", "#FFE3C4", "#E5AC52", "#66090706", "#00000000", "#9E15110E", "#F28A3C", "#D4A390"],
-            // Dark / No Bullshit: neutral charcoal and grey, one functional red for "recording".
+            // Dark: neutral charcoal and grey, one functional red for "recording".
             VisualMode.Dark => ["#141414", "#1C1C1C", "#262626", "#3A3A3A", "#ECECEC", "#A3A3A3", "#D4D4D4", "#262626", "#F2F2F2", "#C4C4C4", "#FFFFFF", "#8C8C8C", "#101010", "#00000000", "#1C1C1C", "#E5484D", "#BDBDBD"],
             // Light: white and pale grey, dark readable text.
             VisualMode.Light => ["#F4F4F4", "#FFFFFF", "#E9E9E9", "#CDCDCD", "#1C1C1C", "#5C5C5C", "#2E2E2E", "#E9E9E9", "#1C1C1C", "#404040", "#000000", "#7A7A7A", "#ECECEC", "#00000000", "#FFFFFF", "#D93036", "#5C5C5C"],

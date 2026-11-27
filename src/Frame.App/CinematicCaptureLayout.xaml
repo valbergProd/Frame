@@ -79,7 +79,7 @@
      <Border x:Name="SaveChip" Grid.Row="1" Grid.Column="1" Style="{StaticResource CinChip}"><TextBlock x:Name="SaveKey" Text="Not set" FontSize="12.5" FontWeight="SemiBold" HorizontalAlignment="Center"/></Border>
      <Button x:Name="ChangeSaveKey" Grid.Row="1" Grid.Column="2" Style="{StaticResource CinLink}" Content="Change hotkey" Margin="18,0,0,0" ToolTip="Change the save clip shortcut" AutomationProperties.Name="Change the save shadow recording hotkey"/>
     </Grid>
-    <!-- Shared notes (FailurePanel, EnginePanel, UnexpectedExitNote, the two-line ReplayInfo slot): last row, so a panel that
+    <!-- Shared notes (FailurePanel, EnginePanel, the two-line ReplayInfo slot): last row, so a panel that
          appears only extends the column downward (it scrolls if needed); nothing above it moves. -->
     <StackPanel x:Name="Notes" Grid.Row="13" MinHeight="38"/>
    </Grid>

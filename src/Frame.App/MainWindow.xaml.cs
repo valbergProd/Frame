@@ -144,6 +144,15 @@ public partial class MainWindow : Window
                 if (expand) await Task.Delay(300); // QuietExpander body fade-in (0.16 s)
                 await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
             }
+            if (args.Contains("--render-update-notes")) // diagnostic: Settings › General open with a sample "What's new" for an available update
+            {
+                availableUpdate = new(ReleaseVersion.Parse("1.1.0")!, new Uri("https://github.com/" + UpdateRepository), new Uri("https://github.com/" + UpdateRepository), "FRAME-1.1.0-Setup.exe", 1, new string('0', 64),
+                    AppUpdates.CleanNotes("## What's new\n- **Sand** blowing across the ground under the stone\n- The unexpected-exit note is now a card in the window\n\n## Fixes\n- Settings text no longer clipped")); updateMessage = "FRAME 1.1.0 is available."; RefreshUpdates();
+                ShowPage(SettingsPage, "", ""); foreach (var section in SettingsPage.Children.OfType<Expander>()) section.IsExpanded = section.Header as string == "General";
+                UpdateLayout(); await Task.Delay(300); await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+                var general = SettingsPage.Children.OfType<Expander>().First(x => x.Header as string == "General"); PageScroll.ScrollToVerticalOffset(general.TransformToAncestor(SettingsPage).Transform(new Point()).Y);
+                await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
+            }
             if (args.Contains("--render-settings-advanced")) // diagnostic: Settings › Advanced open (FFmpeg, encoder, Diagnostics), scrolled to the end
             {
                 ShowPage(SettingsPage, "", ""); foreach (var section in SettingsPage.Children.OfType<Expander>()) section.IsExpanded = section.Header as string == "Advanced settings";

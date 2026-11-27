@@ -454,7 +454,7 @@ public partial class MainWindow
                 // Visual modes (0.6.1): five modes, all named in the title bar at once; a click activates that mode with its own
                 // complete palette (no mixture), the open page stays open, only VisualMode is saved (never a capture setting),
                 // exactly one link is marked active, the links never reach the caption buttons (also at the minimum size), and
-                // Dark / No Bullshit and Light run no decorative clock at all.
+                // Dark and Light run no decorative clock at all.
                 string[] keys = ["Background", "Surface", "Raised", "Line", "Text", "Muted", "Accent", "Hero", "HeroText", "Subtle", "NavActive", "NavFrame", "SidebarBackground", "PageScrim", "Panel", "Recording"];
                 string Palette() => string.Join(",", keys.Select(k => ((SolidColorBrush)Application.Current.Resources[k]).Color.ToString()));
                 var modeBase = mode; var themeBase = CloneSettings();
@@ -470,7 +470,7 @@ public partial class MainWindow
                     if (!VisualModes.Decorative(vm)) quiet &= !atmosphere.Running && !atmosphere.Desert && ActiveScene == null;
                 }
                 Check("Visual modes: five links, one click each activates that mode (complete distinct palettes, page kept, one active link) and saves only the mode", palettes.Values.Distinct().Count() == 5 && chrome && stayed && saved);
-                Check("Dark / No Bullshit and Light: no decorative clock, no desert, no scene", quiet);
+                Check("Dark and Light: no decorative clock, no desert, no scene", quiet);
                 bool Fits()
                 {
                     UpdateLayout(); var caption = Descendants<Button>(TitleBarSurface).Where(x => x.Style == FindResource("CaptionButton") || x.Style == FindResource("CloseCaptionButton")).Min(x => x.TranslatePoint(new Point(), this).X);
