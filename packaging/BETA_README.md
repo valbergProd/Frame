@@ -1,4 +1,4 @@
-# FRAME 1.0.0
+# FRAME 1.1.0
 
 This guide covers installing, using, troubleshooting and removing FRAME.
 
@@ -21,7 +21,7 @@ This guide covers installing, using, troubleshooting and removing FRAME.
 
 ## Install
 
-1. Run `FRAME-1.0.0-Setup.exe`.
+1. Run `FRAME-1.1.0-Setup.exe`.
 2. Windows SmartScreen may warn that the app is not recognized, because the installer is not code-signed. Choose **More info**, then **Run anyway**, if you received the file from the FRAME team.
 3. Follow the wizard. FRAME installs for your Windows account only (no administrator rights) into `%LOCALAPPDATA%\Programs\FRAME`. You can add a desktop shortcut and start FRAME at the end.
 4. Setup prepares FFmpeg automatically with download progress and checksum verification. If preparation fails, check the connection and free disk space, then retry. Nothing else needs installing after setup.

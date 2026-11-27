@@ -1,23 +1,30 @@
-# FRAME 1.0.0
+# FRAME 1.1.0
 
-First stable release of FRAME for Windows x64.
+A visual and polish update to FRAME 1.0. Your settings, hotkeys and recordings are kept.
+
+## What's new
+
+### New
+- Small design change to the classic GUI: added fine desert sand that blows across the ground in gusts of wind.
+- This "What's new" list: when an update is available, FRAME shows what changed in Settings > General and again before you install.
+
+### Improved
+- The "FRAME closed unexpectedly" message is now a small card at the top right of the FRAME window, with Export diagnostics and Dismiss, instead of a box in the Capture page.
+- The Dark mode is simply called "Dark".
+- The note under Settings that explains which changes save at once now sits clearly apart from Advanced settings.
+
+### Fixed
+- Capture page controls (such as Change hotkey) could be cut off on the right when a note appeared above them.
+
+Recording, audio and export behaviour are unchanged.
 
 ## Download and install
 
-Download **FRAME-1.0.0-Setup.exe** below and run it. Setup installs FRAME for your Windows account and automatically downloads and verifies FFmpeg recording tools. Internet access is required the first time; there is no separate FFmpeg installation to perform afterward.
-
-## Features
-
-- Shadow Recording: save the last moments of your selected displays.
-- Manual recording with pause and resume.
-- Clip library, trimming and Crop for social.
-- Primary-display default and remembered recording/startup preferences.
-- Desktop and microphone audio with hardware encoding when supported.
-- Five visual modes and in-app update checks.
+Download **FRAME-1.1.0-Setup.exe** below and run it. Setup installs FRAME for your Windows account and automatically downloads and verifies FFmpeg recording tools. Internet access is required the first time; there is no separate FFmpeg installation to perform afterward.
 
 ## Upgrading
 
-Quit FRAME before running Setup. Your settings, hotkeys and saved recordings are preserved. Builds with in-app updates can find this release under Settings > General > Check for updates.
+Quit FRAME before running Setup. Your settings, hotkeys and saved recordings are preserved. Installations with in-app updates can find this release under Settings > General > Check for updates.
 
 ## Requirements and notes
 

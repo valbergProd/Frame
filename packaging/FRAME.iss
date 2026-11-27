@@ -1,5 +1,5 @@
 ; FRAME installer (Inno Setup 6). Built by scripts\Build-BetaInstaller.ps1, which passes:
-;   /DAppVersion=1.0.0  /DFileVersion=1.0.0.0  /DVersionLabel="1.0.0"
+;   /DAppVersion=1.1.0  /DFileVersion=1.1.0.0  /DVersionLabel="1.1.0"
 ;   /DSourceExe=<published FRAME.exe>  /DOutputDir=<release folder>  /DRepoRoot=<repository>  /DWizardImages=<generated .bmp list>
 ; Per-user install (no administrator rights): %LOCALAPPDATA%\Programs\FRAME. Settings/logs (%LOCALAPPDATA%\FRAME) and
 ; recordings (Videos\FRAME or the chosen folder) are never touched by install or upgrade; uninstall asks before it removes
