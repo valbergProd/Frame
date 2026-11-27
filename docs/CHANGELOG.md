@@ -1,4 +1,4 @@
-# FRAME 1.1.0 · sand, in-window exit note and "What's new" in updates · 27 November 2026 (release draft)
+# FRAME 1.1.0 · sand, in-window exit note and "What's new" in updates · 27 November 2026
 
 - The "FRAME closed unexpectedly" note is now a dismissible card at the top right inside the FRAME window (same style as the save notifications; it never appears outside the window) with Export diagnostics / Dismiss, instead of a box in the Capture page.
 - Fixed Capture-page text ("Change hotkey") being clipped on the right when a note made the column scroll; the scroll bar now has its own space beside the column.

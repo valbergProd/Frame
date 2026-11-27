@@ -1,6 +1,6 @@
 # FRAME quickstart
 
-Current release: 1.0.0. See [release validation](FRAME_100_VALIDATION.md) and the [changelog](CHANGELOG.md) for current status. Older reports describe historical builds.
+Current release: 1.1.0. See [release preparation](FRAME_110_VALIDATION.md), [1.0 validation](FRAME_100_VALIDATION.md) and the [changelog](CHANGELOG.md) for current status. Older reports describe historical builds.
 
 1. Start `FRAME.exe`. A self-contained build includes the .NET runtime; a framework-dependent build requires the .NET 8 Windows Desktop Runtime, x64.
 2. FRAME Setup prepares FFmpeg automatically (internet required on first install). For standalone developer builds only, install FFmpeg 8.1+ with `gfxcapture` and a matching `ffprobe.exe`; choose it in Settings if it is not detected.
@@ -12,4 +12,4 @@ Current release: 1.0.0. See [release validation](FRAME_100_VALIDATION.md) and th
 
 Settings and logs live under `%LOCALAPPDATA%\FRAME`. The installer preserves these and your recordings when upgrading. A standalone build uses the same settings; avoid running two normal copies at once.
 
-Download the installer from [GitHub Releases](https://github.com/valbergProd/Frame/releases/tag/v1.0.0). See [the release workflow](UPDATES.md) for publishing future updates. Physical-device and broader hardware acceptance remain separate from automated tests.
+Download the installer from [GitHub Releases](https://github.com/valbergProd/Frame/releases/tag/v1.1.0). See [the release workflow](UPDATES.md) for publishing future updates. Physical-device and broader hardware acceptance remain separate from automated tests.
